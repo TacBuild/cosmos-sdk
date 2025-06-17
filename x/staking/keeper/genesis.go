@@ -267,13 +267,17 @@ func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
 	}
 
 	return &types.GenesisState{
-		Params:               params,
-		LastTotalPower:       totalPower,
-		LastValidatorPowers:  lastValidatorPowers,
-		Validators:           allValidators,
-		Delegations:          allDelegations,
-		UnbondingDelegations: unbondingDelegations,
-		Redelegations:        redelegations,
-		Exported:             true,
+		Params:                    params,
+		LastTotalPower:            totalPower,
+		LastValidatorPowers:       lastValidatorPowers,
+		Validators:                allValidators,
+		Delegations:               allDelegations,
+		UnbondingDelegations:      unbondingDelegations,
+		Redelegations:             redelegations,
+		Exported:                  true,
+		TokenizeShareRecords:      k.GetAllTokenizeShareRecords(ctx),
+		LastTokenizeShareRecordId: k.GetLastTokenizeShareRecordID(ctx),
+		TotalLiquidStakedTokens:   k.GetTotalLiquidStakedTokens(ctx),
+		TokenizeShareLocks:        k.GetAllTokenizeShareLocks(ctx),
 	}
 }
