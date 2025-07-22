@@ -284,6 +284,8 @@ func (k msgServer) Delegate(ctx context.Context, msg *types.MsgDelegate) (*types
 		)
 	}
 
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+
 	// NOTE: source funds are always unbonded
 	newShares, err := k.Keeper.Delegate(ctx, delegatorAddress, msg.Amount.Amount, types.Unbonded, validator, true)
 	if err != nil {
@@ -301,7 +303,22 @@ func (k msgServer) Delegate(ctx context.Context, msg *types.MsgDelegate) (*types
 		}()
 	}
 
-	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	// if this delegation is from a liquid staking provider (identified if the delegator
+	// is an ICA account), it cannot exceed the global or validator bond cap
+	if k.DelegatorIsLiquidStaker(delegatorAddress) {
+		shares, err := validator.SharesFromTokens(msg.Amount.Amount)
+		if err != nil {
+			return nil, err
+		}
+		if err := k.SafelyIncreaseTotalLiquidStakedTokens(sdkCtx, msg.Amount.Amount, false); err != nil {
+			return nil, err
+		}
+		validator, err = k.SafelyIncreaseValidatorLiquidShares(sdkCtx, valAddr, shares, false)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	sdkCtx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeDelegate,

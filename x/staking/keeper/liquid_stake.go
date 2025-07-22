@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"fmt"
 	"time"
 
 	"cosmossdk.io/math"
@@ -150,6 +151,7 @@ func (k Keeper) SafelyIncreaseTotalLiquidStakedTokens(ctx sdk.Context, amount ma
 // DecreaseTotalLiquidStakedTokens decrements the total liquid staked tokens
 func (k Keeper) DecreaseTotalLiquidStakedTokens(ctx sdk.Context, amount math.Int) error {
 	totalLiquidStake := k.GetTotalLiquidStakedTokens(ctx)
+	fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAA", totalLiquidStake, amount)
 	if amount.GT(totalLiquidStake) {
 		return types.ErrTotalLiquidStakedUnderflow
 	}
