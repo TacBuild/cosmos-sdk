@@ -237,10 +237,7 @@ func (k Keeper) WithdrawSingleShareRecordReward(ctx sdk.Context, recordID uint64
 	if err != nil {
 		return err
 	}
-	del, err := k.stakingKeeper.Delegation(ctx, record.GetModuleAddress(), valAddr)
-	if err != nil {
-		return err
-	}
+	del, _ := k.stakingKeeper.Delegation(ctx, record.GetModuleAddress(), valAddr)
 	if val != nil && del != nil {
 		// withdraw rewards into reward module account and send it to reward owner
 		cacheCtx, write := ctx.CacheContext()

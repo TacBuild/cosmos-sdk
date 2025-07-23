@@ -286,23 +286,6 @@ func (k msgServer) Delegate(ctx context.Context, msg *types.MsgDelegate) (*types
 
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 
-	// NOTE: source funds are always unbonded
-	newShares, err := k.Keeper.Delegate(ctx, delegatorAddress, msg.Amount.Amount, types.Unbonded, validator, true)
-	if err != nil {
-		return nil, err
-	}
-
-	if msg.Amount.Amount.IsInt64() {
-		defer func() {
-			telemetry.IncrCounter(1, types.ModuleName, "delegate")
-			telemetry.SetGaugeWithLabels(
-				[]string{"tx", "msg", sdk.MsgTypeURL(msg)},
-				float32(msg.Amount.Amount.Int64()),
-				[]metrics.Label{telemetry.NewLabel("denom", msg.Amount.Denom)},
-			)
-		}()
-	}
-
 	// if this delegation is from a liquid staking provider (identified if the delegator
 	// is an ICA account), it cannot exceed the global or validator bond cap
 	if k.DelegatorIsLiquidStaker(delegatorAddress) {
@@ -317,6 +300,33 @@ func (k msgServer) Delegate(ctx context.Context, msg *types.MsgDelegate) (*types
 		if err != nil {
 			return nil, err
 		}
+	}
+	// NOTE: source funds are always unbonded
+	newShares, err := k.Keeper.Delegate(ctx, delegatorAddress, msg.Amount.Amount, types.Unbonded, validator, true)
+	if err != nil {
+		return nil, err
+	}
+
+	// If the delegation is a validator bond, increment the validator bond shares
+	delegation, err := k.Keeper.GetDelegation(ctx, delegatorAddress, valAddr)
+	if err != nil {
+		return nil, types.ErrNoDelegation.Wrapf("delegation not found: %s", err)
+	}
+	if delegation.ValidatorBond {
+		if err := k.IncreaseValidatorBondShares(sdkCtx, valAddr, newShares); err != nil {
+			return nil, err
+		}
+	}
+
+	if msg.Amount.Amount.IsInt64() {
+		defer func() {
+			telemetry.IncrCounter(1, types.ModuleName, "delegate")
+			telemetry.SetGaugeWithLabels(
+				[]string{"tx", "msg", sdk.MsgTypeURL(msg)},
+				float32(msg.Amount.Amount.Int64()),
+				[]metrics.Label{telemetry.NewLabel("denom", msg.Amount.Denom)},
+			)
+		}()
 	}
 
 	sdkCtx.EventManager().EmitEvents(sdk.Events{
