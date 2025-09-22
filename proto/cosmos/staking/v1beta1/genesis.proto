@@ -1,13 +1,13 @@
 syntax = "proto3";
 package cosmos.staking.v1beta1;
 
-option go_package = "github.com/cosmos/cosmos-sdk/x/staking/types";
-
-import "gogoproto/gogo.proto";
+import "amino/amino.proto";
 import "cosmos/staking/v1beta1/staking.proto";
 import "cosmos_proto/cosmos.proto";
-import "amino/amino.proto";
+import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/cosmos/cosmos-sdk/x/staking/types";
 
 // GenesisState defines the staking module's genesis state.
 message GenesisState {
@@ -55,11 +55,8 @@ message GenesisState {
   // total number of liquid staked tokens at genesis.
   //
   // Since: cosmos-sdk 0.47-lsm
-  bytes total_liquid_staked_tokens = 11 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false,
-    (amino.dont_omitempty) = true
-  ];
+  bytes total_liquid_staked_tokens = 11
+      [(gogoproto.customtype) = "cosmossdk.io/math.Int", (gogoproto.nullable) = false, (amino.dont_omitempty) = true];
 
   // tokenize shares locks at genesis.
   //

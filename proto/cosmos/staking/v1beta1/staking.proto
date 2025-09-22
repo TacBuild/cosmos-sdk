@@ -139,7 +139,7 @@ message Validator {
   // Since: cosmos-sdk 0.47-lsm
   string validator_bond_shares = 14 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
   // liquid_shares is the number of shares either tokenized or owned by a liquid staking provider.
@@ -147,7 +147,7 @@ message Validator {
   // Since: cosmos-sdk 0.47-lsm
   string liquid_shares = 15 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
 }
