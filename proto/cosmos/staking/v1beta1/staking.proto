@@ -1,16 +1,15 @@
 syntax = "proto3";
 package cosmos.staking.v1beta1;
 
+import "amino/amino.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
-
-import "cosmos_proto/cosmos.proto";
-import "cosmos/base/v1beta1/coin.proto";
-import "amino/amino.proto";
-import "tendermint/types/types.proto";
 import "tendermint/abci/types.proto";
+import "tendermint/types/types.proto";
 
 option go_package = "github.com/cosmos/cosmos-sdk/x/staking/types";
 
@@ -241,7 +240,8 @@ message UnbondingDelegation {
   string validator_address = 2 [(cosmos_proto.scalar) = "cosmos.ValidatorAddressString"];
   // entries are the unbonding delegation entries.
   repeated UnbondingDelegationEntry entries = 3
-      [(gogoproto.nullable) = false, (amino.dont_omitempty) = true]; // unbonding delegation entries
+      [(gogoproto.nullable)   = false,
+       (amino.dont_omitempty) = true]; // unbonding delegation entries
 }
 
 // UnbondingDelegationEntry defines an unbonding object with relevant metadata.
@@ -314,7 +314,8 @@ message Redelegation {
   string validator_dst_address = 3 [(cosmos_proto.scalar) = "cosmos.ValidatorAddressString"];
   // entries are the redelegation entries.
   repeated RedelegationEntry entries = 4
-      [(gogoproto.nullable) = false, (amino.dont_omitempty) = true]; // redelegation entries
+      [(gogoproto.nullable)   = false,
+       (amino.dont_omitempty) = true]; // redelegation entries
 }
 
 // Params defines the parameters for the x/staking module.
@@ -345,22 +346,28 @@ message Params {
   // delegations from liquid staking providers
   string validator_bond_factor = 7 [
     (gogoproto.moretags)   = "yaml:\"validator_bond_factor\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   // global_liquid_staking_cap represents a cap on the portion of stake that
   // comes from liquid staking providers
   string global_liquid_staking_cap = 8 [
     (gogoproto.moretags)   = "yaml:\"global_liquid_staking_cap\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
   // validator_liquid_staking_cap represents a cap on the portion of stake that
   // comes from liquid staking providers for a specific validator
   string validator_liquid_staking_cap = 9 [
     (gogoproto.moretags)   = "yaml:\"validator_liquid_staking_cap\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
 }
 
