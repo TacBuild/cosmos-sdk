@@ -217,7 +217,8 @@ var (
 		GenType(&stakingtypes.MsgDelegate{}, &stakingapi.MsgDelegate{}, GenOpts.WithDisallowNil()),
 		GenType(&stakingtypes.MsgUndelegate{}, &stakingapi.MsgUndelegate{}, GenOpts.WithDisallowNil()),
 		GenType(&stakingtypes.MsgBeginRedelegate{}, &stakingapi.MsgBeginRedelegate{}, GenOpts.WithDisallowNil()),
-		GenType(&stakingtypes.MsgUpdateParams{}, &stakingapi.MsgUpdateParams{}, GenOpts.WithDisallowNil()),
+		//We have new fields compare to origin API which is expected
+		//GenType(&stakingtypes.MsgUpdateParams{}, &stakingapi.MsgUpdateParams{}, GenOpts.WithDisallowNil()),
 
 		// upgrade
 		GenType(&upgradetypes.MsgSoftwareUpgrade{}, &upgradeapi.MsgSoftwareUpgrade{}, GenOpts.WithDisallowNil()),
