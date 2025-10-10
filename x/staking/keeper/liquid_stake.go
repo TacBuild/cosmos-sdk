@@ -437,7 +437,7 @@ func (k Keeper) RefreshTotalLiquidStaked(ctx sdk.Context) error {
 
 	// Sum up the total liquid tokens and increment each validator's liquid shares
 	totalLiquidStakedTokens := sdk.ZeroInt()
-	allDelegations, err := k.GetAllDelegations(ctx)
+	allDelegations, _ := k.GetAllDelegations(ctx)
 	for _, delegation := range allDelegations {
 		delegatorAddress, err := sdk.AccAddressFromBech32(delegation.DelegatorAddress)
 		if err != nil {

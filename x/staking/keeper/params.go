@@ -87,31 +87,34 @@ func (k Keeper) GetParams(ctx context.Context) (params types.Params, err error) 
 //
 // Since: cosmos-sdk 0.47-lsm
 func (k Keeper) ValidatorBondFactor(ctx context.Context) (res sdk.Dec, err error) {
-	if params, err := k.GetParams(ctx); err != nil {
+	params, err := k.GetParams(ctx)
+	if err != nil {
 		return sdk.Dec{}, err
-	} else {
-		return params.ValidatorBondFactor, nil
 	}
+
+	return params.ValidatorBondFactor, nil
 }
 
 // Global liquid staking cap across all liquid staking providers
 //
 // Since: cosmos-sdk 0.47-lsm
 func (k Keeper) GlobalLiquidStakingCap(ctx sdk.Context) (res sdk.Dec, err error) {
-	if params, err := k.GetParams(ctx); err != nil {
+	params, err := k.GetParams(ctx)
+	if err != nil {
 		return sdk.Dec{}, err
-	} else {
-		return params.GlobalLiquidStakingCap, nil
 	}
+
+	return params.GlobalLiquidStakingCap, nil
 }
 
 // Liquid staking cap for each validator
 //
 // Since: cosmos-sdk 0.47-lsm
 func (k Keeper) ValidatorLiquidStakingCap(ctx sdk.Context) (res sdk.Dec, err error) {
-	if params, err := k.GetParams(ctx); err != nil {
+	params, err := k.GetParams(ctx)
+	if err != nil {
 		return sdk.Dec{}, err
-	} else {
-		return params.ValidatorLiquidStakingCap, nil
 	}
+
+	return params.ValidatorLiquidStakingCap, nil
 }

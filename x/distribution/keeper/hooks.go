@@ -181,8 +181,8 @@ func (h Hooks) AfterUnbondingInitiated(_ context.Context, _ uint64) error {
 	return nil
 }
 
-func (h Hooks) BeforeTokenizeShareRecordRemoved(ctx sdk.Context, recordId uint64) error {
-	err := h.k.WithdrawSingleShareRecordReward(ctx, recordId)
+func (h Hooks) BeforeTokenizeShareRecordRemoved(ctx sdk.Context, recordID uint64) error {
+	err := h.k.WithdrawSingleShareRecordReward(ctx, recordID)
 	if err != nil {
 		h.k.Logger(ctx).Error(err.Error())
 	}

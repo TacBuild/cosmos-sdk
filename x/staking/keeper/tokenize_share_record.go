@@ -32,7 +32,7 @@ func (k Keeper) SetLastTokenizeShareRecordID(ctx sdk.Context, id uint64) {
 func (k Keeper) GetTokenizeShareRecord(ctx context.Context, id uint64) (tokenizeShareRecord types.TokenizeShareRecord, err error) {
 	store := k.storeService.OpenKVStore(ctx)
 
-	bz, err := store.Get(types.GetTokenizeShareRecordByIndexKey(id))
+	bz, _ := store.Get(types.GetTokenizeShareRecordByIndexKey(id))
 	if bz == nil {
 		return tokenizeShareRecord, types.ErrTokenizeShareRecordNotExists.Wrapf("tokenizeShareRecord %d does not exist", id)
 	}

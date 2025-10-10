@@ -37,15 +37,14 @@ func ParseShareTokenDenom(denom string) (TokenizeShareRecord, error) {
 		return record, err
 	}
 
-	recordId, err := strconv.ParseUint(denomParts[1], 10, 64)
+	recordID, err := strconv.ParseUint(denomParts[1], 10, 64)
 	if err != nil {
 		err = errors.Wrap(err, "failed to parse recordId part")
 		return record, err
 	}
 
-	record.Id = uint64(recordId)
 	record.Validator = valAddress.String()
-	record.ModuleAccount = fmt.Sprintf("%s%d", TokenizeShareModuleAccountPrefix, recordId)
+	record.ModuleAccount = fmt.Sprintf("%s%d", TokenizeShareModuleAccountPrefix, recordID)
 
 	return record, nil
 }

@@ -27,7 +27,7 @@ const (
 	AttributeKeyNewShares         = "new_shares"
 
 	AttributeKeyShareOwner      = "share_owner"
-	AttributeKeyShareRecordId   = "share_record_id"
+	AttributeKeyShareRecordID   = "share_record_id"
 	AttributeKeyAmount          = "amount"
 	AttributeKeyTokenizedShares = "tokenized_shares"
 )

@@ -114,7 +114,7 @@ type StakingHooks interface {
 	BeforeValidatorSlashed(ctx context.Context, valAddr sdk.ValAddress, fraction math.LegacyDec) error
 	AfterUnbondingInitiated(ctx context.Context, id uint64) error
 
-	BeforeTokenizeShareRecordRemoved(ctx sdk.Context, recordId uint64) error // Must be called when tokenize share record is deleted
+	BeforeTokenizeShareRecordRemoved(ctx sdk.Context, recordID uint64) error // Must be called when tokenize share record is deleted
 }
 
 // StakingHooksWrapper is a wrapper for modules to inject StakingHooks using depinject.
