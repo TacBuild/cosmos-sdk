@@ -11,6 +11,11 @@ const (
 	EventTypeCancelUnbondingDelegation = "cancel_unbonding_delegation"
 	EventTypeRedelegate                = "redelegate"
 
+	EventTypeTokenizeShares              = "tokenize_shares"
+	EventTypeRedeemShares                = "redeem_shares"
+	EventTypeTransferTokenizeShareRecord = "transfer_tokenize_share_record"
+	EventTypeValidatorBondDelegation     = "validator_bond_delegation"
+
 	AttributeKeyValidator         = "validator"
 	AttributeKeyCommissionRate    = "commission_rate"
 	AttributeKeyMinSelfDelegation = "min_self_delegation"
@@ -20,4 +25,9 @@ const (
 	AttributeKeyCreationHeight    = "creation_height"
 	AttributeKeyCompletionTime    = "completion_time"
 	AttributeKeyNewShares         = "new_shares"
+
+	AttributeKeyShareOwner      = "share_owner"
+	AttributeKeyShareRecordID   = "share_record_id"
+	AttributeKeyAmount          = "amount"
+	AttributeKeyTokenizedShares = "tokenized_shares"
 )

@@ -365,6 +365,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 * (signing) [#14087](https://github.com/cosmos/cosmos-sdk/pull/14087) Add SignModeHandlerWithContext interface with a new `GetSignBytesWithContext` to get the sign bytes using `context.Context` as an argument to access state.
 * (server) [#14062](https://github.com/cosmos/cosmos-sdk/pull/14062) Remove rosetta from server start.
 * (crypto) [#3129](https://github.com/cosmos/cosmos-sdk/pull/3129) New armor and keyring key derivation uses aead and encryption uses chacha20poly.
+* (x/staking) [#2](https://github.com/TacBuild/cosmos-sdk/pull/2) TAC soft-fork. Changes in staking moudle for liquidstake integration.
 
 ### State Machine Breaking
 

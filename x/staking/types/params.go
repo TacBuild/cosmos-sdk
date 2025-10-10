@@ -31,18 +31,39 @@ const (
 	DefaultHistoricalEntries uint32 = 10000
 )
 
-// DefaultMinCommissionRate is set to 0%
-var DefaultMinCommissionRate = math.LegacyZeroDec()
+var (
+	// ValidatorBondFactor of -1 indicates that it's disabled
+	ValidatorBondCapDisabled = sdk.NewDecFromInt(sdk.NewInt(-1))
+	// DefaultMinCommissionRate is set to 0%
+	DefaultMinCommissionRate = math.LegacyZeroDec()
+	// DefaultValidatorBondFactor is set to -1 (disabled)
+	DefaultValidatorBondFactor = ValidatorBondCapDisabled
+	// DefaultGlobalLiquidStakingCap is set to 100%
+	DefaultGlobalLiquidStakingCap = sdk.OneDec()
+	// DefaultValidatorLiquidStakingCap is set to 100%
+	DefaultValidatorLiquidStakingCap = sdk.OneDec()
+)
 
 // NewParams creates a new Params instance
-func NewParams(unbondingTime time.Duration, maxValidators, maxEntries, historicalEntries uint32, bondDenom string, minCommissionRate math.LegacyDec) Params {
+func NewParams(
+	unbondingTime time.Duration,
+	maxValidators, maxEntries, historicalEntries uint32,
+	bondDenom string,
+	minCommissionRate,
+	validatorBondFactor,
+	globalLiquidStakingCap,
+	validatorLiquidStakingCap math.LegacyDec,
+) Params {
 	return Params{
-		UnbondingTime:     unbondingTime,
-		MaxValidators:     maxValidators,
-		MaxEntries:        maxEntries,
-		HistoricalEntries: historicalEntries,
-		BondDenom:         bondDenom,
-		MinCommissionRate: minCommissionRate,
+		UnbondingTime:             unbondingTime,
+		MaxValidators:             maxValidators,
+		MaxEntries:                maxEntries,
+		HistoricalEntries:         historicalEntries,
+		BondDenom:                 bondDenom,
+		MinCommissionRate:         minCommissionRate,
+		ValidatorBondFactor:       validatorBondFactor,
+		GlobalLiquidStakingCap:    globalLiquidStakingCap,
+		ValidatorLiquidStakingCap: validatorLiquidStakingCap,
 	}
 }
 
@@ -55,6 +76,9 @@ func DefaultParams() Params {
 		DefaultHistoricalEntries,
 		sdk.DefaultBondDenom,
 		DefaultMinCommissionRate,
+		DefaultValidatorBondFactor,
+		DefaultGlobalLiquidStakingCap,
+		DefaultValidatorLiquidStakingCap,
 	)
 }
 
