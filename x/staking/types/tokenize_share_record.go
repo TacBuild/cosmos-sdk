@@ -5,9 +5,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
-	"github.com/pkg/errors"
 )
 
 func (r TokenizeShareRecord) GetModuleAddress() sdk.AccAddress {
