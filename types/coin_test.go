@@ -293,7 +293,11 @@ func (s *coinTestSuite) TestQuoIntCoins() {
 		} else {
 			res := tc.input.QuoInt(tc.divisor)
 			assert.Equal(tc.isValid, res.IsValid())
-			assert.Equal(tc.expected, res, "quotient of coins is incorrect, tc #%d", i)
+			// Use semantic Coins.Equal instead of reflect.DeepEqual: in Go 1.25+
+			// `new(big.Int).Quo(...)` returning zero leaves an empty (non-nil)
+			// internal abs slice, which differs from `big.NewInt(0)` whose abs
+			// is nil. Both represent the same value.
+			assert.True(tc.expected.Equal(res), "quotient of coins is incorrect, tc #%d: expected %s, got %s", i, tc.expected, res)
 		}
 	}
 }

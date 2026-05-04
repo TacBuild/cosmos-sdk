@@ -639,6 +639,601 @@ func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
+// MsgUnbondValidator defines a method for performing the status transition for
+// a validator from bonded to unbonding.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgUnbondValidator struct {
+	ValidatorAddress string `protobuf:"bytes,1,opt,name=validator_address,json=validatorAddress,proto3" json:"validator_address,omitempty"`
+}
+
+func (m *MsgUnbondValidator) Reset()         { *m = MsgUnbondValidator{} }
+func (m *MsgUnbondValidator) String() string { return proto.CompactTextString(m) }
+func (*MsgUnbondValidator) ProtoMessage()    {}
+func (*MsgUnbondValidator) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{14}
+}
+func (m *MsgUnbondValidator) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUnbondValidator) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUnbondValidator.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUnbondValidator) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUnbondValidator.Merge(m, src)
+}
+func (m *MsgUnbondValidator) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUnbondValidator) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUnbondValidator.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUnbondValidator proto.InternalMessageInfo
+
+func (m *MsgUnbondValidator) GetValidatorAddress() string {
+	if m != nil {
+		return m.ValidatorAddress
+	}
+	return ""
+}
+
+// MsgUnbondValidatorResponse defines the MsgUnbondValidator response type.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgUnbondValidatorResponse struct {
+}
+
+func (m *MsgUnbondValidatorResponse) Reset()         { *m = MsgUnbondValidatorResponse{} }
+func (m *MsgUnbondValidatorResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUnbondValidatorResponse) ProtoMessage()    {}
+func (*MsgUnbondValidatorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{15}
+}
+func (m *MsgUnbondValidatorResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUnbondValidatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUnbondValidatorResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUnbondValidatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUnbondValidatorResponse.Merge(m, src)
+}
+func (m *MsgUnbondValidatorResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUnbondValidatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUnbondValidatorResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUnbondValidatorResponse proto.InternalMessageInfo
+
+// MsgTokenizeShares tokenizes a delegation.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgTokenizeShares struct {
+	DelegatorAddress    string     `protobuf:"bytes,1,opt,name=delegator_address,json=delegatorAddress,proto3" json:"delegator_address,omitempty"`
+	ValidatorAddress    string     `protobuf:"bytes,2,opt,name=validator_address,json=validatorAddress,proto3" json:"validator_address,omitempty"`
+	Amount              types.Coin `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount"`
+	TokenizedShareOwner string     `protobuf:"bytes,4,opt,name=tokenized_share_owner,json=tokenizedShareOwner,proto3" json:"tokenized_share_owner,omitempty"`
+}
+
+func (m *MsgTokenizeShares) Reset()         { *m = MsgTokenizeShares{} }
+func (m *MsgTokenizeShares) String() string { return proto.CompactTextString(m) }
+func (*MsgTokenizeShares) ProtoMessage()    {}
+func (*MsgTokenizeShares) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{16}
+}
+func (m *MsgTokenizeShares) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgTokenizeShares) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgTokenizeShares.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgTokenizeShares) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgTokenizeShares.Merge(m, src)
+}
+func (m *MsgTokenizeShares) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgTokenizeShares) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgTokenizeShares.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgTokenizeShares proto.InternalMessageInfo
+
+// MsgTokenizeSharesResponse defines the MsgTokenizeShares response type.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgTokenizeSharesResponse struct {
+	Amount types.Coin `protobuf:"bytes,1,opt,name=amount,proto3" json:"amount"`
+}
+
+func (m *MsgTokenizeSharesResponse) Reset()         { *m = MsgTokenizeSharesResponse{} }
+func (m *MsgTokenizeSharesResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgTokenizeSharesResponse) ProtoMessage()    {}
+func (*MsgTokenizeSharesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{17}
+}
+func (m *MsgTokenizeSharesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgTokenizeSharesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgTokenizeSharesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgTokenizeSharesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgTokenizeSharesResponse.Merge(m, src)
+}
+func (m *MsgTokenizeSharesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgTokenizeSharesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgTokenizeSharesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgTokenizeSharesResponse proto.InternalMessageInfo
+
+func (m *MsgTokenizeSharesResponse) GetAmount() types.Coin {
+	if m != nil {
+		return m.Amount
+	}
+	return types.Coin{}
+}
+
+// MsgRedeemTokensForShares redeems a tokenized share back into a native delegation.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgRedeemTokensForShares struct {
+	DelegatorAddress string     `protobuf:"bytes,1,opt,name=delegator_address,json=delegatorAddress,proto3" json:"delegator_address,omitempty"`
+	Amount           types.Coin `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount"`
+}
+
+func (m *MsgRedeemTokensForShares) Reset()         { *m = MsgRedeemTokensForShares{} }
+func (m *MsgRedeemTokensForShares) String() string { return proto.CompactTextString(m) }
+func (*MsgRedeemTokensForShares) ProtoMessage()    {}
+func (*MsgRedeemTokensForShares) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{18}
+}
+func (m *MsgRedeemTokensForShares) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRedeemTokensForShares) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRedeemTokensForShares.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRedeemTokensForShares) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRedeemTokensForShares.Merge(m, src)
+}
+func (m *MsgRedeemTokensForShares) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRedeemTokensForShares) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRedeemTokensForShares.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRedeemTokensForShares proto.InternalMessageInfo
+
+// MsgRedeemTokensForSharesResponse defines the MsgRedeemTokensForShares response type.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgRedeemTokensForSharesResponse struct {
+	Amount types.Coin `protobuf:"bytes,1,opt,name=amount,proto3" json:"amount"`
+}
+
+func (m *MsgRedeemTokensForSharesResponse) Reset()         { *m = MsgRedeemTokensForSharesResponse{} }
+func (m *MsgRedeemTokensForSharesResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRedeemTokensForSharesResponse) ProtoMessage()    {}
+func (*MsgRedeemTokensForSharesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{19}
+}
+func (m *MsgRedeemTokensForSharesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRedeemTokensForSharesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRedeemTokensForSharesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRedeemTokensForSharesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRedeemTokensForSharesResponse.Merge(m, src)
+}
+func (m *MsgRedeemTokensForSharesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRedeemTokensForSharesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRedeemTokensForSharesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRedeemTokensForSharesResponse proto.InternalMessageInfo
+
+func (m *MsgRedeemTokensForSharesResponse) GetAmount() types.Coin {
+	if m != nil {
+		return m.Amount
+	}
+	return types.Coin{}
+}
+
+// MsgTransferTokenizeShareRecord transfer a tokenize share record.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgTransferTokenizeShareRecord struct {
+	TokenizeShareRecordId uint64 `protobuf:"varint,1,opt,name=tokenize_share_record_id,json=tokenizeShareRecordId,proto3" json:"tokenize_share_record_id,omitempty"`
+	Sender                string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	NewOwner              string `protobuf:"bytes,3,opt,name=new_owner,json=newOwner,proto3" json:"new_owner,omitempty"`
+}
+
+func (m *MsgTransferTokenizeShareRecord) Reset()         { *m = MsgTransferTokenizeShareRecord{} }
+func (m *MsgTransferTokenizeShareRecord) String() string { return proto.CompactTextString(m) }
+func (*MsgTransferTokenizeShareRecord) ProtoMessage()    {}
+func (*MsgTransferTokenizeShareRecord) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{20}
+}
+func (m *MsgTransferTokenizeShareRecord) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgTransferTokenizeShareRecord) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgTransferTokenizeShareRecord.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgTransferTokenizeShareRecord) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgTransferTokenizeShareRecord.Merge(m, src)
+}
+func (m *MsgTransferTokenizeShareRecord) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgTransferTokenizeShareRecord) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgTransferTokenizeShareRecord.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgTransferTokenizeShareRecord proto.InternalMessageInfo
+
+// MsgTransferTokenizeShareRecordResponse defines the MsgTransferTokenizeShareRecord response type.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgTransferTokenizeShareRecordResponse struct {
+}
+
+func (m *MsgTransferTokenizeShareRecordResponse) Reset() {
+	*m = MsgTransferTokenizeShareRecordResponse{}
+}
+func (m *MsgTransferTokenizeShareRecordResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgTransferTokenizeShareRecordResponse) ProtoMessage()    {}
+func (*MsgTransferTokenizeShareRecordResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{21}
+}
+func (m *MsgTransferTokenizeShareRecordResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgTransferTokenizeShareRecordResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgTransferTokenizeShareRecordResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgTransferTokenizeShareRecordResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgTransferTokenizeShareRecordResponse.Merge(m, src)
+}
+func (m *MsgTransferTokenizeShareRecordResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgTransferTokenizeShareRecordResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgTransferTokenizeShareRecordResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgTransferTokenizeShareRecordResponse proto.InternalMessageInfo
+
+// MsgDisableTokenizeShares prevents the tokenization of shares for a given address.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgDisableTokenizeShares struct {
+	DelegatorAddress string `protobuf:"bytes,1,opt,name=delegator_address,json=delegatorAddress,proto3" json:"delegator_address,omitempty"`
+}
+
+func (m *MsgDisableTokenizeShares) Reset()         { *m = MsgDisableTokenizeShares{} }
+func (m *MsgDisableTokenizeShares) String() string { return proto.CompactTextString(m) }
+func (*MsgDisableTokenizeShares) ProtoMessage()    {}
+func (*MsgDisableTokenizeShares) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{22}
+}
+func (m *MsgDisableTokenizeShares) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDisableTokenizeShares) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDisableTokenizeShares.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDisableTokenizeShares) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDisableTokenizeShares.Merge(m, src)
+}
+func (m *MsgDisableTokenizeShares) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDisableTokenizeShares) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDisableTokenizeShares.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDisableTokenizeShares proto.InternalMessageInfo
+
+// MsgDisableTokenizeSharesResponse defines the /DisableTokenizeShares response type.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgDisableTokenizeSharesResponse struct {
+}
+
+func (m *MsgDisableTokenizeSharesResponse) Reset()         { *m = MsgDisableTokenizeSharesResponse{} }
+func (m *MsgDisableTokenizeSharesResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDisableTokenizeSharesResponse) ProtoMessage()    {}
+func (*MsgDisableTokenizeSharesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{23}
+}
+func (m *MsgDisableTokenizeSharesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDisableTokenizeSharesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDisableTokenizeSharesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDisableTokenizeSharesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDisableTokenizeSharesResponse.Merge(m, src)
+}
+func (m *MsgDisableTokenizeSharesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDisableTokenizeSharesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDisableTokenizeSharesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDisableTokenizeSharesResponse proto.InternalMessageInfo
+
+// MsgEnableTokenizeShares re-enables tokenization of shares for a given address.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgEnableTokenizeShares struct {
+	DelegatorAddress string `protobuf:"bytes,1,opt,name=delegator_address,json=delegatorAddress,proto3" json:"delegator_address,omitempty"`
+}
+
+func (m *MsgEnableTokenizeShares) Reset()         { *m = MsgEnableTokenizeShares{} }
+func (m *MsgEnableTokenizeShares) String() string { return proto.CompactTextString(m) }
+func (*MsgEnableTokenizeShares) ProtoMessage()    {}
+func (*MsgEnableTokenizeShares) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{24}
+}
+func (m *MsgEnableTokenizeShares) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgEnableTokenizeShares) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgEnableTokenizeShares.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgEnableTokenizeShares) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgEnableTokenizeShares.Merge(m, src)
+}
+func (m *MsgEnableTokenizeShares) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgEnableTokenizeShares) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgEnableTokenizeShares.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgEnableTokenizeShares proto.InternalMessageInfo
+
+// MsgEnableTokenizeSharesResponse defines the EnableTokenizeShares response type.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgEnableTokenizeSharesResponse struct {
+	CompletionTime time.Time `protobuf:"bytes,1,opt,name=completion_time,json=completionTime,proto3,stdtime" json:"completion_time"`
+}
+
+func (m *MsgEnableTokenizeSharesResponse) Reset()         { *m = MsgEnableTokenizeSharesResponse{} }
+func (m *MsgEnableTokenizeSharesResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgEnableTokenizeSharesResponse) ProtoMessage()    {}
+func (*MsgEnableTokenizeSharesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{25}
+}
+func (m *MsgEnableTokenizeSharesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgEnableTokenizeSharesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgEnableTokenizeSharesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgEnableTokenizeSharesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgEnableTokenizeSharesResponse.Merge(m, src)
+}
+func (m *MsgEnableTokenizeSharesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgEnableTokenizeSharesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgEnableTokenizeSharesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgEnableTokenizeSharesResponse proto.InternalMessageInfo
+
+func (m *MsgEnableTokenizeSharesResponse) GetCompletionTime() time.Time {
+	if m != nil {
+		return m.CompletionTime
+	}
+	return time.Time{}
+}
+
+// MsgValidatorBond defines a SDK message for performing validator self-bond of delegated coins
+// from a delegator to a validator.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgValidatorBond struct {
+	DelegatorAddress string `protobuf:"bytes,1,opt,name=delegator_address,json=delegatorAddress,proto3" json:"delegator_address,omitempty" yaml:"delegator_address"`
+	ValidatorAddress string `protobuf:"bytes,2,opt,name=validator_address,json=validatorAddress,proto3" json:"validator_address,omitempty" yaml:"validator_address"`
+}
+
+func (m *MsgValidatorBond) Reset()         { *m = MsgValidatorBond{} }
+func (m *MsgValidatorBond) String() string { return proto.CompactTextString(m) }
+func (*MsgValidatorBond) ProtoMessage()    {}
+func (*MsgValidatorBond) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{26}
+}
+func (m *MsgValidatorBond) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgValidatorBond) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgValidatorBond.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgValidatorBond) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgValidatorBond.Merge(m, src)
+}
+func (m *MsgValidatorBond) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgValidatorBond) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgValidatorBond.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgValidatorBond proto.InternalMessageInfo
+
+// MsgValidatorBondResponse defines the ValidatorBond response type.
+//
+// Since: cosmos-sdk 0.47-lsm
+type MsgValidatorBondResponse struct {
+}
+
+func (m *MsgValidatorBondResponse) Reset()         { *m = MsgValidatorBondResponse{} }
+func (m *MsgValidatorBondResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgValidatorBondResponse) ProtoMessage()    {}
+func (*MsgValidatorBondResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0926ef28816b35ab, []int{27}
+}
+func (m *MsgValidatorBondResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgValidatorBondResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgValidatorBondResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgValidatorBondResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgValidatorBondResponse.Merge(m, src)
+}
+func (m *MsgValidatorBondResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgValidatorBondResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgValidatorBondResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgValidatorBondResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgCreateValidator)(nil), "cosmos.staking.v1beta1.MsgCreateValidator")
 	proto.RegisterType((*MsgCreateValidatorResponse)(nil), "cosmos.staking.v1beta1.MsgCreateValidatorResponse")
@@ -654,87 +1249,128 @@ func init() {
 	proto.RegisterType((*MsgCancelUnbondingDelegationResponse)(nil), "cosmos.staking.v1beta1.MsgCancelUnbondingDelegationResponse")
 	proto.RegisterType((*MsgUpdateParams)(nil), "cosmos.staking.v1beta1.MsgUpdateParams")
 	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "cosmos.staking.v1beta1.MsgUpdateParamsResponse")
+	proto.RegisterType((*MsgUnbondValidator)(nil), "cosmos.staking.v1beta1.MsgUnbondValidator")
+	proto.RegisterType((*MsgUnbondValidatorResponse)(nil), "cosmos.staking.v1beta1.MsgUnbondValidatorResponse")
+	proto.RegisterType((*MsgTokenizeShares)(nil), "cosmos.staking.v1beta1.MsgTokenizeShares")
+	proto.RegisterType((*MsgTokenizeSharesResponse)(nil), "cosmos.staking.v1beta1.MsgTokenizeSharesResponse")
+	proto.RegisterType((*MsgRedeemTokensForShares)(nil), "cosmos.staking.v1beta1.MsgRedeemTokensForShares")
+	proto.RegisterType((*MsgRedeemTokensForSharesResponse)(nil), "cosmos.staking.v1beta1.MsgRedeemTokensForSharesResponse")
+	proto.RegisterType((*MsgTransferTokenizeShareRecord)(nil), "cosmos.staking.v1beta1.MsgTransferTokenizeShareRecord")
+	proto.RegisterType((*MsgTransferTokenizeShareRecordResponse)(nil), "cosmos.staking.v1beta1.MsgTransferTokenizeShareRecordResponse")
+	proto.RegisterType((*MsgDisableTokenizeShares)(nil), "cosmos.staking.v1beta1.MsgDisableTokenizeShares")
+	proto.RegisterType((*MsgDisableTokenizeSharesResponse)(nil), "cosmos.staking.v1beta1.MsgDisableTokenizeSharesResponse")
+	proto.RegisterType((*MsgEnableTokenizeShares)(nil), "cosmos.staking.v1beta1.MsgEnableTokenizeShares")
+	proto.RegisterType((*MsgEnableTokenizeSharesResponse)(nil), "cosmos.staking.v1beta1.MsgEnableTokenizeSharesResponse")
+	proto.RegisterType((*MsgValidatorBond)(nil), "cosmos.staking.v1beta1.MsgValidatorBond")
+	proto.RegisterType((*MsgValidatorBondResponse)(nil), "cosmos.staking.v1beta1.MsgValidatorBondResponse")
 }
 
 func init() { proto.RegisterFile("cosmos/staking/v1beta1/tx.proto", fileDescriptor_0926ef28816b35ab) }
 
 var fileDescriptor_0926ef28816b35ab = []byte{
-	// 1187 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x58, 0xcf, 0x6f, 0xdc, 0x44,
-	0x14, 0x5e, 0xef, 0x26, 0x0b, 0x99, 0x90, 0x6c, 0xe2, 0x24, 0xed, 0xc6, 0x0d, 0xbb, 0xc1, 0x0d,
-	0x4a, 0x14, 0x58, 0x3b, 0x0d, 0xa5, 0x11, 0xdb, 0x0a, 0x35, 0xdb, 0xb4, 0x50, 0x20, 0x10, 0x39,
-	0xa4, 0x48, 0x08, 0xb4, 0xcc, 0xda, 0x13, 0xc7, 0xca, 0xda, 0xe3, 0x7a, 0x66, 0xa3, 0xee, 0x01,
-	0x09, 0x71, 0x02, 0x4e, 0xfd, 0x07, 0x90, 0x8a, 0x04, 0x12, 0xc7, 0x1c, 0x72, 0xe4, 0x4e, 0xd5,
-	0x53, 0x95, 0x53, 0xd5, 0x43, 0x40, 0xc9, 0x21, 0xfc, 0x0f, 0xbd, 0x20, 0xdb, 0x63, 0xef, 0xda,
-	0xfb, 0xb3, 0x81, 0x5e, 0x7a, 0x49, 0x36, 0x33, 0xdf, 0x7c, 0x6f, 0xde, 0xf7, 0xbd, 0x37, 0x33,
-	0x1b, 0x90, 0x57, 0x31, 0x31, 0x31, 0x91, 0x09, 0x85, 0xbb, 0x86, 0xa5, 0xcb, 0x7b, 0x97, 0x2a,
-	0x88, 0xc2, 0x4b, 0x32, 0xbd, 0x27, 0xd9, 0x0e, 0xa6, 0x98, 0x3f, 0xe7, 0x03, 0x24, 0x06, 0x90,
-	0x18, 0x40, 0x98, 0xd6, 0x31, 0xd6, 0xab, 0x48, 0xf6, 0x50, 0x95, 0xda, 0xb6, 0x0c, 0xad, 0xba,
-	0xbf, 0x44, 0xc8, 0xc7, 0xa7, 0xa8, 0x61, 0x22, 0x42, 0xa1, 0x69, 0x33, 0xc0, 0xa4, 0x8e, 0x75,
-	0xec, 0x7d, 0x94, 0xdd, 0x4f, 0x6c, 0x74, 0xda, 0x8f, 0x54, 0xf6, 0x27, 0x58, 0x58, 0x7f, 0x2a,
-	0xc7, 0x76, 0x59, 0x81, 0x04, 0x85, 0x5b, 0x54, 0xb1, 0x61, 0xb1, 0xf9, 0xb9, 0x0e, 0x59, 0x04,
-	0x9b, 0xf6, 0x51, 0xe7, 0x19, 0xca, 0x24, 0x2e, 0xc2, 0xfd, 0xc5, 0x26, 0xc6, 0xa1, 0x69, 0x58,
-	0x58, 0xf6, 0x7e, 0xfa, 0x43, 0xe2, 0xb3, 0x01, 0xc0, 0xaf, 0x13, 0xfd, 0x86, 0x83, 0x20, 0x45,
-	0x77, 0x60, 0xd5, 0xd0, 0x20, 0xc5, 0x0e, 0xbf, 0x01, 0x86, 0x35, 0x44, 0x54, 0xc7, 0xb0, 0xa9,
-	0x81, 0xad, 0x2c, 0x37, 0xcb, 0x2d, 0x0c, 0x2f, 0x5f, 0x94, 0xda, 0x6b, 0x24, 0xad, 0x35, 0xa0,
-	0xa5, 0xa1, 0x87, 0x47, 0xf9, 0xc4, 0xef, 0xa7, 0xfb, 0x8b, 0x9c, 0xd2, 0x4c, 0xc1, 0x2b, 0x00,
-	0xa8, 0xd8, 0x34, 0x0d, 0x42, 0x5c, 0xc2, 0xa4, 0x47, 0x38, 0xdf, 0x89, 0xf0, 0x46, 0x88, 0x54,
-	0x20, 0x45, 0xa4, 0x99, 0xb4, 0x89, 0x85, 0xff, 0x06, 0x4c, 0x98, 0x86, 0x55, 0x26, 0xa8, 0xba,
-	0x5d, 0xd6, 0x50, 0x15, 0xe9, 0xd0, 0xdb, 0x6d, 0x6a, 0x96, 0x5b, 0x18, 0x2a, 0x2d, 0xb9, 0x6b,
-	0x9e, 0x1e, 0xe5, 0xa7, 0xfc, 0x18, 0x44, 0xdb, 0x95, 0x0c, 0x2c, 0x9b, 0x90, 0xee, 0x48, 0xb7,
-	0x2d, 0x7a, 0x78, 0x50, 0x00, 0x2c, 0xf8, 0x6d, 0x8b, 0xfa, 0xd4, 0xe3, 0xa6, 0x61, 0x6d, 0xa2,
-	0xea, 0xf6, 0x5a, 0x48, 0xc5, 0x7f, 0x00, 0xc6, 0x19, 0x31, 0x76, 0xca, 0x50, 0xd3, 0x1c, 0x44,
-	0x48, 0x76, 0xc0, 0xe3, 0x17, 0x0e, 0x0f, 0x0a, 0x93, 0x8c, 0x62, 0xd5, 0x9f, 0xd9, 0xa4, 0x8e,
-	0x61, 0xe9, 0x59, 0x4e, 0x19, 0x0b, 0x17, 0xb1, 0x19, 0xfe, 0x53, 0x30, 0xbe, 0x17, 0xa8, 0x1b,
-	0x12, 0x0d, 0x7a, 0x44, 0x6f, 0x1c, 0x1e, 0x14, 0x5e, 0x67, 0x44, 0xa1, 0x03, 0x11, 0x46, 0x65,
-	0x6c, 0x2f, 0x36, 0xce, 0xdf, 0x02, 0x69, 0xbb, 0x56, 0xd9, 0x45, 0xf5, 0x6c, 0xda, 0x93, 0x72,
-	0x52, 0xf2, 0x8b, 0x51, 0x0a, 0x8a, 0x51, 0x5a, 0xb5, 0xea, 0xa5, 0xec, 0xa3, 0xc6, 0x1e, 0x55,
-	0xa7, 0x6e, 0x53, 0x2c, 0x6d, 0xd4, 0x2a, 0x1f, 0xa3, 0xba, 0xc2, 0x56, 0xf3, 0x45, 0x30, 0xb8,
-	0x07, 0xab, 0x35, 0x94, 0x7d, 0xc5, 0xa3, 0x99, 0x0e, 0x1c, 0x71, 0x2b, 0xb0, 0xc9, 0x0e, 0x23,
-	0x62, 0xac, 0xbf, 0xa4, 0x78, 0xfd, 0x87, 0x07, 0xf9, 0xc4, 0x3f, 0x0f, 0xf2, 0x89, 0xef, 0x4f,
-	0xf7, 0x17, 0x5b, 0xd3, 0xfb, 0xe9, 0x74, 0x7f, 0x91, 0xe5, 0x55, 0x20, 0xda, 0xae, 0xdc, 0x5a,
-	0x66, 0xe2, 0x0c, 0x10, 0x5a, 0x47, 0x15, 0x44, 0x6c, 0x6c, 0x11, 0x24, 0xfe, 0x96, 0x02, 0x63,
-	0xeb, 0x44, 0xbf, 0xa9, 0x19, 0xf4, 0x45, 0x56, 0x66, 0x5b, 0x6b, 0x92, 0x67, 0xb7, 0xe6, 0x0e,
-	0xc8, 0x34, 0x6a, 0xb4, 0xec, 0x40, 0x8a, 0x58, 0x45, 0x16, 0x9e, 0x1e, 0xe5, 0x2f, 0xb4, 0x56,
-	0xe3, 0x27, 0x48, 0x87, 0x6a, 0x7d, 0x0d, 0xa9, 0x4d, 0x35, 0xb9, 0x86, 0x54, 0x65, 0x54, 0x8d,
-	0x74, 0x01, 0xff, 0x45, 0xfb, 0x6a, 0xf7, 0xab, 0x71, 0xbe, 0xcf, 0x4a, 0x6f, 0x53, 0xe4, 0xc5,
-	0xf7, 0x7b, 0xfb, 0x78, 0x21, 0xea, 0x63, 0xc4, 0x12, 0x51, 0x00, 0xd9, 0xf8, 0x58, 0xe8, 0xe1,
-	0xcf, 0x49, 0x30, 0xbc, 0x4e, 0x74, 0x16, 0x0d, 0xf1, 0x37, 0xdb, 0x35, 0x14, 0xe7, 0xa5, 0x90,
-	0xed, 0xd4, 0x50, 0xfd, 0xb6, 0xd3, 0x7f, 0xf0, 0xec, 0x1a, 0x48, 0x43, 0x13, 0xd7, 0x2c, 0xea,
-	0x59, 0xd5, 0x6f, 0x1f, 0xb0, 0x35, 0xc5, 0xf7, 0x22, 0x02, 0xb6, 0xe4, 0xe7, 0x0a, 0x78, 0x2e,
-	0x2a, 0x60, 0xa0, 0x87, 0x38, 0x05, 0x26, 0x9a, 0xfe, 0x0c, 0x65, 0xfb, 0x31, 0xe5, 0x1d, 0xcb,
-	0x25, 0xa4, 0x1b, 0x96, 0x82, 0xb4, 0xff, 0x59, 0xbd, 0x2d, 0x30, 0xd5, 0x50, 0x8f, 0x38, 0xea,
-	0xf3, 0x2b, 0x38, 0x11, 0xae, 0xdf, 0x74, 0xd4, 0xb6, 0xb4, 0x1a, 0xa1, 0x21, 0x6d, 0xea, 0xf9,
-	0x69, 0xd7, 0x08, 0x6d, 0xf5, 0x66, 0xe0, 0x0c, 0xde, 0x5c, 0xef, 0xed, 0x4d, 0xec, 0x90, 0x8a,
-	0x89, 0x2e, 0xda, 0xde, 0x21, 0x15, 0x1b, 0x0d, 0x9c, 0xe2, 0x15, 0xaf, 0xdb, 0xed, 0x2a, 0x72,
-	0x5b, 0xa9, 0xec, 0xbe, 0x00, 0xd8, 0x99, 0x24, 0xb4, 0x9c, 0xc8, 0x9f, 0x07, 0xcf, 0x83, 0xd2,
-	0x88, 0xbb, 0xcf, 0xfb, 0x7f, 0xe5, 0x39, 0x7f, 0xaf, 0xa3, 0x0d, 0x06, 0x17, 0x23, 0xfe, 0x92,
-	0x04, 0x23, 0xeb, 0x44, 0xdf, 0xb2, 0xb4, 0x97, 0xba, 0x6d, 0xae, 0xf6, 0xb6, 0x26, 0x1b, 0xb5,
-	0xa6, 0xa1, 0x88, 0xf8, 0x07, 0x07, 0xa6, 0x22, 0x23, 0x2f, 0xd2, 0x11, 0xfe, 0xb3, 0x30, 0xd1,
-	0x64, 0xaf, 0x44, 0x67, 0xbc, 0x77, 0xc7, 0x41, 0x21, 0xd3, 0xd8, 0xfa, 0xec, 0x92, 0xf4, 0xee,
-	0x52, 0x24, 0x77, 0xf1, 0x59, 0x12, 0xcc, 0xb8, 0x57, 0x1f, 0xb4, 0x54, 0x54, 0xdd, 0xb2, 0x2a,
-	0xd8, 0xd2, 0x0c, 0x4b, 0x6f, 0x7a, 0x79, 0xbc, 0x8c, 0x8e, 0xf3, 0xf3, 0x20, 0xa3, 0xba, 0x97,
-	0xbd, 0x6b, 0xcc, 0x0e, 0x32, 0xf4, 0x1d, 0xbf, 0xa7, 0x53, 0xca, 0x68, 0x30, 0xfc, 0xa1, 0x37,
-	0x5a, 0xfc, 0x3a, 0x28, 0x8d, 0xc3, 0xb8, 0x90, 0x97, 0xaf, 0x74, 0xae, 0x96, 0xf9, 0xd8, 0x6b,
-	0xa3, 0x93, 0xb8, 0xe2, 0x55, 0x30, 0xd7, 0x6d, 0x3e, 0x28, 0xa5, 0xe2, 0x44, 0x9b, 0xf0, 0xe2,
-	0x13, 0x0e, 0x64, 0xdc, 0xca, 0xb3, 0x35, 0x48, 0xd1, 0x06, 0x74, 0xa0, 0x49, 0xf8, 0x2b, 0x60,
-	0x08, 0xd6, 0xe8, 0x0e, 0x76, 0x0c, 0x5a, 0xef, 0xe9, 0x52, 0x03, 0xca, 0xaf, 0x82, 0xb4, 0xed,
-	0x31, 0xb0, 0xba, 0xca, 0x75, 0x7a, 0xc8, 0xf8, 0x71, 0x22, 0x9a, 0xfa, 0x0b, 0x8b, 0x1f, 0xb5,
-	0xee, 0x71, 0xc5, 0x95, 0xa8, 0x11, 0xc5, 0x95, 0x66, 0xae, 0x49, 0x9a, 0x7b, 0xe1, 0xf7, 0x87,
-	0x58, 0x1a, 0xa2, 0x04, 0xce, 0xc7, 0x86, 0xba, 0x49, 0xb1, 0xb2, 0xfc, 0x67, 0x1a, 0xa4, 0xd6,
-	0x89, 0xce, 0xdf, 0x05, 0x99, 0xf8, 0x37, 0x88, 0xc5, 0x4e, 0x99, 0xb4, 0x3e, 0xf8, 0x84, 0xe5,
-	0xfe, 0xb1, 0x61, 0x97, 0xef, 0x82, 0x91, 0xe8, 0xc3, 0x70, 0xa1, 0x0b, 0x49, 0x04, 0x29, 0x2c,
-	0xf5, 0x8b, 0x0c, 0x83, 0x7d, 0x05, 0x5e, 0x0d, 0x5f, 0x30, 0x17, 0xbb, 0xac, 0x0e, 0x40, 0xc2,
-	0x5b, 0x7d, 0x80, 0x42, 0xf6, 0xbb, 0x20, 0x13, 0xbf, 0xe8, 0xbb, 0xa9, 0x17, 0xc3, 0x76, 0x55,
-	0xaf, 0xd3, 0xad, 0x55, 0x01, 0xa0, 0xe9, 0x76, 0x79, 0xb3, 0x0b, 0x43, 0x03, 0x26, 0x14, 0xfa,
-	0x82, 0x85, 0x31, 0x7e, 0xe5, 0xc0, 0x74, 0xe7, 0xf3, 0xed, 0x72, 0x37, 0xcf, 0x3b, 0xad, 0x12,
-	0xae, 0x9d, 0x65, 0x55, 0xf8, 0xaa, 0x9a, 0x78, 0xd4, 0xda, 0xce, 0xfc, 0xb7, 0xe0, 0xb5, 0x48,
-	0x2b, 0xcf, 0x77, 0xcb, 0xb2, 0x09, 0x28, 0xc8, 0x7d, 0x02, 0xbb, 0x85, 0x5f, 0x11, 0x06, 0xbf,
-	0x73, 0xbb, 0xb9, 0x74, 0xeb, 0xe1, 0x71, 0x8e, 0x7b, 0x7c, 0x9c, 0xe3, 0xfe, 0x3e, 0xce, 0x71,
-	0xf7, 0x4f, 0x72, 0x89, 0xc7, 0x27, 0xb9, 0xc4, 0x93, 0x93, 0x5c, 0xe2, 0xcb, 0xb7, 0x75, 0x83,
-	0xee, 0xd4, 0x2a, 0x92, 0x8a, 0x4d, 0xf6, 0xcf, 0x02, 0xb9, 0x6d, 0x2f, 0xd3, 0xba, 0x8d, 0x48,
-	0x25, 0xed, 0xdd, 0x6d, 0xef, 0xfc, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xf8, 0x25, 0x35, 0x94, 0xf0,
-	0x10, 0x00, 0x00,
+	// 1631 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x59, 0x4f, 0x6c, 0xd4, 0x46,
+	0x17, 0x8f, 0x93, 0x90, 0x8f, 0x0c, 0x5f, 0x12, 0xe2, 0xfc, 0x61, 0xe3, 0xe4, 0xdb, 0xcd, 0x67,
+	0x68, 0x93, 0xa6, 0x8d, 0x37, 0x50, 0x4a, 0xda, 0x05, 0x21, 0x08, 0x09, 0x6d, 0x5a, 0x52, 0x90,
+	0x03, 0x54, 0xea, 0x1f, 0x6d, 0xbd, 0xf6, 0xc4, 0xb1, 0xb2, 0x1e, 0x2f, 0x1e, 0x27, 0xb0, 0x95,
+	0x2a, 0xd1, 0xf6, 0xd2, 0xf6, 0xc4, 0xa5, 0xc7, 0x4a, 0x54, 0x6d, 0xa5, 0x1e, 0x39, 0xe4, 0x54,
+	0x55, 0x3d, 0x47, 0x9c, 0x50, 0x4e, 0x88, 0x43, 0x5a, 0xc1, 0x81, 0x9e, 0x7b, 0xe5, 0x52, 0x79,
+	0x3c, 0x9e, 0xf5, 0xff, 0xdd, 0x04, 0x50, 0x25, 0x2e, 0xb0, 0x3b, 0xf3, 0xde, 0x9b, 0xf7, 0x7e,
+	0xbf, 0xf7, 0xde, 0xbc, 0xd9, 0x80, 0x82, 0x6a, 0x61, 0xd3, 0xc2, 0x45, 0xec, 0x28, 0x6b, 0x06,
+	0xd2, 0x8b, 0x1b, 0x47, 0x2b, 0xd0, 0x51, 0x8e, 0x16, 0x9d, 0x1b, 0x52, 0xcd, 0xb6, 0x1c, 0x8b,
+	0x1f, 0xf6, 0x04, 0x24, 0x2a, 0x20, 0x51, 0x01, 0x61, 0x44, 0xb7, 0x2c, 0xbd, 0x0a, 0x8b, 0x44,
+	0xaa, 0xb2, 0xbe, 0x52, 0x54, 0x50, 0xdd, 0x53, 0x11, 0x0a, 0xd1, 0x2d, 0xc7, 0x30, 0x21, 0x76,
+	0x14, 0xb3, 0x46, 0x05, 0x06, 0x75, 0x4b, 0xb7, 0xc8, 0xc7, 0xa2, 0xfb, 0x89, 0xae, 0x8e, 0x78,
+	0x27, 0x95, 0xbd, 0x0d, 0x7a, 0xac, 0xb7, 0x95, 0xa7, 0x5e, 0x56, 0x14, 0x0c, 0x99, 0x8b, 0xaa,
+	0x65, 0x20, 0xba, 0x7f, 0x24, 0x25, 0x0a, 0xdf, 0x69, 0x4f, 0xea, 0x10, 0x95, 0x32, 0xb1, 0x2b,
+	0xe1, 0xfe, 0x47, 0x37, 0xfa, 0x15, 0xd3, 0x40, 0x56, 0x91, 0xfc, 0xeb, 0x2d, 0x89, 0x4f, 0x3a,
+	0x01, 0xbf, 0x84, 0xf5, 0x73, 0x36, 0x54, 0x1c, 0x78, 0x55, 0xa9, 0x1a, 0x9a, 0xe2, 0x58, 0x36,
+	0x7f, 0x09, 0x1c, 0xd0, 0x20, 0x56, 0x6d, 0xa3, 0xe6, 0x18, 0x16, 0xca, 0x71, 0xe3, 0xdc, 0xe4,
+	0x81, 0x63, 0x87, 0xa5, 0x64, 0x8c, 0xa4, 0xf9, 0x86, 0xe8, 0x5c, 0xf7, 0xd6, 0x4e, 0xa1, 0xed,
+	0x97, 0xc7, 0x77, 0xa6, 0x38, 0x39, 0x68, 0x82, 0x97, 0x01, 0x50, 0x2d, 0xd3, 0x34, 0x30, 0x76,
+	0x0d, 0xb6, 0x13, 0x83, 0x13, 0x69, 0x06, 0xcf, 0x31, 0x49, 0x59, 0x71, 0x20, 0x0e, 0x1a, 0x0d,
+	0x58, 0xe1, 0x3f, 0x05, 0x03, 0xa6, 0x81, 0xca, 0x18, 0x56, 0x57, 0xca, 0x1a, 0xac, 0x42, 0x5d,
+	0x21, 0xde, 0x76, 0x8c, 0x73, 0x93, 0xdd, 0x73, 0x33, 0xae, 0xce, 0x83, 0x9d, 0xc2, 0x90, 0x77,
+	0x06, 0xd6, 0xd6, 0x24, 0xc3, 0x2a, 0x9a, 0x8a, 0xb3, 0x2a, 0x2d, 0x22, 0x67, 0x7b, 0x73, 0x1a,
+	0xd0, 0xc3, 0x17, 0x91, 0xe3, 0x99, 0xee, 0x37, 0x0d, 0xb4, 0x0c, 0xab, 0x2b, 0xf3, 0xcc, 0x14,
+	0xff, 0x36, 0xe8, 0xa7, 0x86, 0x2d, 0xbb, 0xac, 0x68, 0x9a, 0x0d, 0x31, 0xce, 0x75, 0x12, 0xfb,
+	0xc2, 0xf6, 0xe6, 0xf4, 0x20, 0x35, 0x71, 0xd6, 0xdb, 0x59, 0x76, 0x6c, 0x03, 0xe9, 0x39, 0x4e,
+	0x3e, 0xc8, 0x94, 0xe8, 0x0e, 0xff, 0x3e, 0xe8, 0xdf, 0xf0, 0xd1, 0x65, 0x86, 0xf6, 0x11, 0x43,
+	0xff, 0xdf, 0xde, 0x9c, 0xfe, 0x1f, 0x35, 0xc4, 0x18, 0x08, 0x59, 0x94, 0x0f, 0x6e, 0x44, 0xd6,
+	0xf9, 0xf3, 0xa0, 0xab, 0xb6, 0x5e, 0x59, 0x83, 0xf5, 0x5c, 0x17, 0x81, 0x72, 0x50, 0xf2, 0x92,
+	0x51, 0xf2, 0x93, 0x51, 0x3a, 0x8b, 0xea, 0x73, 0xb9, 0xbb, 0x0d, 0x1f, 0x55, 0xbb, 0x5e, 0x73,
+	0x2c, 0xe9, 0xd2, 0x7a, 0xe5, 0x3d, 0x58, 0x97, 0xa9, 0x36, 0x5f, 0x02, 0xfb, 0x36, 0x94, 0xea,
+	0x3a, 0xcc, 0xfd, 0x87, 0x98, 0x19, 0xf1, 0x19, 0x71, 0x33, 0x30, 0x40, 0x87, 0x11, 0x22, 0xd6,
+	0x53, 0x29, 0x9d, 0xf9, 0xfa, 0x76, 0xa1, 0xed, 0xaf, 0xdb, 0x85, 0xb6, 0x2f, 0x1f, 0xdf, 0x99,
+	0x8a, 0x87, 0xf7, 0xed, 0xe3, 0x3b, 0x53, 0x34, 0xae, 0x69, 0xac, 0xad, 0x15, 0xe3, 0x69, 0x26,
+	0x8e, 0x01, 0x21, 0xbe, 0x2a, 0x43, 0x5c, 0xb3, 0x10, 0x86, 0xe2, 0xcf, 0x1d, 0xe0, 0xe0, 0x12,
+	0xd6, 0x17, 0x34, 0xc3, 0x79, 0x9e, 0x99, 0x99, 0x48, 0x4d, 0xfb, 0xde, 0xa9, 0xb9, 0x0a, 0xfa,
+	0x1a, 0x39, 0x5a, 0xb6, 0x15, 0x07, 0xd2, 0x8c, 0x9c, 0x7e, 0xb0, 0x53, 0x18, 0x8d, 0x67, 0xe3,
+	0x05, 0xa8, 0x2b, 0x6a, 0x7d, 0x1e, 0xaa, 0x81, 0x9c, 0x9c, 0x87, 0xaa, 0xdc, 0xab, 0x86, 0xaa,
+	0x80, 0xff, 0x20, 0x39, 0xdb, 0xbd, 0x6c, 0x9c, 0x68, 0x31, 0xd3, 0x13, 0x92, 0xbc, 0x74, 0xba,
+	0x39, 0x8f, 0xa3, 0x61, 0x1e, 0x43, 0x94, 0x88, 0x02, 0xc8, 0x45, 0xd7, 0x18, 0x87, 0xdf, 0xb7,
+	0x83, 0x03, 0x4b, 0x58, 0xa7, 0xa7, 0x41, 0x7e, 0x21, 0xa9, 0xa0, 0x38, 0x12, 0x42, 0x2e, 0xad,
+	0xa0, 0x5a, 0x2d, 0xa7, 0xa7, 0xe0, 0xec, 0x14, 0xe8, 0x52, 0x4c, 0x6b, 0x1d, 0x39, 0x84, 0xaa,
+	0x56, 0xeb, 0x80, 0xea, 0x94, 0xde, 0x0a, 0x01, 0x18, 0x8b, 0xcf, 0x05, 0x70, 0x38, 0x0c, 0xa0,
+	0x8f, 0x87, 0x38, 0x04, 0x06, 0x02, 0x5f, 0x19, 0x6c, 0xdf, 0x74, 0x90, 0xb6, 0x3c, 0x07, 0x75,
+	0x03, 0xc9, 0x50, 0x7b, 0xc6, 0xe8, 0x5d, 0x01, 0x43, 0x0d, 0xf4, 0xb0, 0xad, 0xee, 0x1e, 0xc1,
+	0x01, 0xa6, 0xbf, 0x6c, 0xab, 0x89, 0x66, 0x35, 0xec, 0x30, 0xb3, 0x1d, 0xbb, 0x37, 0x3b, 0x8f,
+	0x9d, 0x38, 0x37, 0x9d, 0x7b, 0xe0, 0xe6, 0x4c, 0x73, 0x6e, 0x22, 0x4d, 0x2a, 0x02, 0xba, 0x58,
+	0x23, 0x4d, 0x2a, 0xb2, 0xea, 0x33, 0xc5, 0xcb, 0xa4, 0xda, 0x6b, 0x55, 0xe8, 0x96, 0x52, 0xd9,
+	0x9d, 0x00, 0x68, 0x4f, 0x12, 0x62, 0x1d, 0xf9, 0xb2, 0x3f, 0x1e, 0xcc, 0xf5, 0xb8, 0x7e, 0xde,
+	0xfa, 0xa3, 0xc0, 0x79, 0xbe, 0xf6, 0x36, 0x2c, 0xb8, 0x32, 0xe2, 0x0f, 0xed, 0xa0, 0x67, 0x09,
+	0xeb, 0x57, 0x90, 0xf6, 0x42, 0x97, 0xcd, 0xc9, 0xe6, 0xd4, 0xe4, 0xc2, 0xd4, 0x34, 0x10, 0x11,
+	0x7f, 0xe3, 0xc0, 0x50, 0x68, 0xe5, 0x79, 0x32, 0xc2, 0x5f, 0x64, 0x81, 0xb6, 0x37, 0x0b, 0x74,
+	0x8c, 0xcc, 0x1d, 0x9b, 0xd3, 0x7d, 0x0d, 0xd7, 0xc7, 0x67, 0xa4, 0x37, 0x66, 0x42, 0xb1, 0x8b,
+	0x4f, 0xda, 0xc1, 0x98, 0x7b, 0xf5, 0x29, 0x48, 0x85, 0xd5, 0x2b, 0xa8, 0x62, 0x21, 0xcd, 0x40,
+	0x7a, 0x60, 0xf2, 0x78, 0x11, 0x19, 0xe7, 0x27, 0x40, 0x9f, 0xea, 0x5e, 0xf6, 0x2e, 0x31, 0xab,
+	0xd0, 0xd0, 0x57, 0xbd, 0x9a, 0xee, 0x90, 0x7b, 0xfd, 0xe5, 0x77, 0xc8, 0x6a, 0xe9, 0x13, 0x3f,
+	0x35, 0xb6, 0xa3, 0x40, 0x1e, 0x3f, 0x91, 0x9e, 0x2d, 0x13, 0x91, 0x69, 0x23, 0x0d, 0x5c, 0xf1,
+	0x24, 0x38, 0x92, 0xb5, 0xef, 0xa7, 0x52, 0x69, 0x20, 0xe1, 0x78, 0xf1, 0x3e, 0x07, 0xfa, 0xdc,
+	0xcc, 0xab, 0x69, 0x8a, 0x03, 0x2f, 0x29, 0xb6, 0x62, 0x62, 0xfe, 0x04, 0xe8, 0x56, 0xd6, 0x9d,
+	0x55, 0xcb, 0x36, 0x9c, 0x7a, 0x53, 0x96, 0x1a, 0xa2, 0xfc, 0x59, 0xd0, 0x55, 0x23, 0x16, 0x68,
+	0x5e, 0xe5, 0xd3, 0x06, 0x19, 0xef, 0x9c, 0x10, 0xa6, 0x9e, 0x62, 0xe9, 0xdd, 0xb8, 0x8f, 0xb3,
+	0x2e, 0x44, 0x8d, 0x53, 0x5c, 0x68, 0x8e, 0x04, 0xa0, 0xb9, 0xc1, 0xde, 0x0f, 0x91, 0x30, 0x44,
+	0x09, 0x1c, 0x8a, 0x2c, 0x65, 0x41, 0x31, 0x2b, 0x62, 0x72, 0x4b, 0x79, 0x08, 0x36, 0x46, 0xb4,
+	0x85, 0xa4, 0x9c, 0x6b, 0x9a, 0xba, 0xd1, 0x54, 0x2b, 0x0d, 0x27, 0x8f, 0x23, 0x74, 0x68, 0x8c,
+	0x1c, 0xca, 0x6e, 0xce, 0xad, 0x76, 0xd0, 0xbf, 0x84, 0xf5, 0xcb, 0xd6, 0x1a, 0x44, 0xc6, 0x67,
+	0x70, 0x79, 0x55, 0xb1, 0x21, 0x7e, 0x56, 0xd5, 0xb4, 0x90, 0x5e, 0x4d, 0xbb, 0x88, 0x8c, 0x9f,
+	0x6d, 0xbd, 0x88, 0x3a, 0x5d, 0xc2, 0x59, 0xfd, 0x5c, 0x00, 0x43, 0x0e, 0x0d, 0x4c, 0x2b, 0x63,
+	0x37, 0xb4, 0xb2, 0x75, 0x1d, 0x41, 0x9b, 0x0e, 0x81, 0xe9, 0x3e, 0x0c, 0x30, 0x35, 0x02, 0xc8,
+	0x45, 0x57, 0xa9, 0x94, 0xcf, 0xee, 0xbf, 0xe2, 0x65, 0x30, 0x12, 0x43, 0x92, 0x75, 0xd9, 0x46,
+	0x0c, 0xdc, 0xae, 0x62, 0x10, 0x7f, 0xe5, 0xc8, 0xb8, 0xe8, 0x5e, 0xa5, 0xd0, 0x24, 0xc6, 0xf1,
+	0x79, 0xcb, 0x7e, 0xb6, 0x3c, 0xcd, 0xb6, 0xde, 0xae, 0x43, 0xce, 0x35, 0x85, 0xe4, 0x23, 0x30,
+	0x9e, 0xe6, 0xfb, 0xd3, 0x23, 0xf3, 0x23, 0x07, 0xf2, 0x2e, 0xe0, 0xb6, 0x82, 0xf0, 0x0a, 0xb4,
+	0x43, 0xc0, 0xcb, 0x50, 0xb5, 0x6c, 0x8d, 0x9f, 0x05, 0x39, 0x9f, 0x49, 0xca, 0xbf, 0x4d, 0x36,
+	0xca, 0x86, 0x46, 0x4e, 0xeb, 0x94, 0x59, 0x82, 0x04, 0xd4, 0x16, 0x35, 0x7e, 0x18, 0x74, 0x61,
+	0x88, 0x34, 0x68, 0x7b, 0xe9, 0x2a, 0xd3, 0x6f, 0xfc, 0x28, 0xe8, 0x46, 0xf0, 0x3a, 0xcd, 0x22,
+	0x32, 0xa7, 0xc9, 0xfb, 0x11, 0xbc, 0xee, 0x25, 0xc8, 0x40, 0x10, 0x0d, 0xaa, 0x21, 0x4e, 0x82,
+	0x97, 0xb3, 0x9d, 0x64, 0xa5, 0xf8, 0x85, 0xc7, 0xf4, 0xbc, 0x81, 0x95, 0x4a, 0x15, 0x3e, 0x97,
+	0x8a, 0x6c, 0x4a, 0x98, 0x48, 0x08, 0x4b, 0x74, 0x81, 0xf9, 0x79, 0x93, 0x23, 0x6d, 0x6f, 0x01,
+	0xfd, 0x7b, 0x6e, 0xd6, 0x40, 0x21, 0xc5, 0x03, 0x96, 0x56, 0x4b, 0x7b, 0x19, 0x6b, 0xf6, 0xfb,
+	0x63, 0x4d, 0x6c, 0xc6, 0xdc, 0xe2, 0xc8, 0xe3, 0x9a, 0x35, 0xd0, 0x39, 0x0b, 0x69, 0xfc, 0x62,
+	0x7a, 0xb4, 0x63, 0x7f, 0xef, 0x14, 0x72, 0x75, 0xc5, 0xac, 0x96, 0xc4, 0xb8, 0xfb, 0x09, 0x25,
+	0xb8, 0x98, 0xde, 0x2a, 0x03, 0xa6, 0xe2, 0xdd, 0x3d, 0xe1, 0x22, 0x68, 0x06, 0x9e, 0xf7, 0xfe,
+	0x0c, 0x45, 0xe2, 0xa3, 0x76, 0xec, 0xf7, 0x1e, 0xd0, 0xb1, 0x84, 0x75, 0xfe, 0x1a, 0xe8, 0x8b,
+	0xfe, 0xc6, 0x35, 0x95, 0x76, 0xd7, 0xc6, 0x7f, 0x92, 0x10, 0x8e, 0xb5, 0x2e, 0xcb, 0x08, 0x5b,
+	0x03, 0x3d, 0xe1, 0x9f, 0x2e, 0x26, 0x33, 0x8c, 0x84, 0x24, 0x85, 0x99, 0x56, 0x25, 0xd9, 0x61,
+	0x1f, 0x83, 0xfd, 0xec, 0x8d, 0x7d, 0x38, 0x43, 0xdb, 0x17, 0x12, 0x5e, 0x6d, 0x41, 0x88, 0x59,
+	0xbf, 0x06, 0xfa, 0xa2, 0x4f, 0xd1, 0x2c, 0xf4, 0x22, 0xb2, 0x99, 0xe8, 0xa5, 0xbd, 0xab, 0x2a,
+	0x00, 0x04, 0xde, 0x3f, 0x2f, 0x65, 0x58, 0x68, 0x88, 0x09, 0xd3, 0x2d, 0x89, 0xb1, 0x33, 0x7e,
+	0xe2, 0xc0, 0x48, 0xfa, 0x04, 0x7e, 0x3c, 0x8b, 0xf3, 0x34, 0x2d, 0xe1, 0xd4, 0x5e, 0xb4, 0x58,
+	0x2b, 0x1a, 0xb8, 0x1b, 0x1f, 0x38, 0xf9, 0xcf, 0xc1, 0x7f, 0x43, 0xc3, 0xe6, 0x44, 0x56, 0x94,
+	0x01, 0x41, 0xa1, 0xd8, 0xa2, 0x60, 0xd6, 0xf1, 0xb3, 0x2e, 0xf9, 0xd1, 0x09, 0x6f, 0x2a, 0x13,
+	0xe7, 0x90, 0x6c, 0x26, 0xf9, 0x29, 0x43, 0x1c, 0x8f, 0x40, 0x6f, 0xa4, 0x0f, 0xbf, 0x92, 0x61,
+	0x25, 0x2c, 0x2a, 0x1c, 0x6d, 0x59, 0x94, 0x9d, 0xf7, 0x15, 0x07, 0x86, 0x92, 0x07, 0x92, 0xac,
+	0x4a, 0x4c, 0xd4, 0x10, 0xde, 0xdc, 0xad, 0x06, 0xf3, 0xe2, 0x3b, 0x0e, 0x8c, 0x66, 0x5d, 0xfe,
+	0x27, 0xb2, 0x02, 0x4b, 0xd7, 0x13, 0x4e, 0xef, 0x4d, 0x2f, 0x84, 0x4e, 0xf2, 0x25, 0x9e, 0x85,
+	0x4e, 0xa2, 0x46, 0x26, 0x3a, 0x99, 0xb7, 0x34, 0x7f, 0x93, 0x03, 0x83, 0x89, 0x57, 0x74, 0x56,
+	0x96, 0x27, 0x29, 0x08, 0xb3, 0xbb, 0x54, 0x08, 0x76, 0xf4, 0xf0, 0x7d, 0x99, 0xd5, 0xd1, 0x43,
+	0x92, 0x99, 0x1d, 0x3d, 0xf1, 0xe6, 0x12, 0xf6, 0xdd, 0x74, 0x9f, 0x79, 0x73, 0xe7, 0xb7, 0x1e,
+	0xe6, 0xb9, 0x7b, 0x0f, 0xf3, 0xdc, 0x9f, 0x0f, 0xf3, 0xdc, 0xad, 0x47, 0xf9, 0xb6, 0x7b, 0x8f,
+	0xf2, 0x6d, 0xf7, 0x1f, 0xe5, 0xdb, 0x3e, 0x7c, 0x4d, 0x37, 0x9c, 0xd5, 0xf5, 0x8a, 0xa4, 0x5a,
+	0x26, 0xfd, 0x2b, 0x52, 0x31, 0xf1, 0x91, 0xe7, 0xd4, 0x6b, 0x10, 0x57, 0xba, 0xc8, 0x74, 0xf0,
+	0xfa, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x2d, 0x4c, 0x5f, 0x8f, 0x09, 0x1b, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -768,6 +1404,38 @@ type MsgClient interface {
 	// UpdateParams defines an operation for updating the x/staking module
 	// parameters.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
+	// UnbondValidator defines a method for performing the status transition for a validator
+	// from bonded to unbonding.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	UnbondValidator(ctx context.Context, in *MsgUnbondValidator, opts ...grpc.CallOption) (*MsgUnbondValidatorResponse, error)
+	// TokenizeShares defines a method for tokenizing shares from a validator.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	TokenizeShares(ctx context.Context, in *MsgTokenizeShares, opts ...grpc.CallOption) (*MsgTokenizeSharesResponse, error)
+	// RedeemTokensForShares defines a method for redeeming tokens from a validator for
+	// shares.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	RedeemTokensForShares(ctx context.Context, in *MsgRedeemTokensForShares, opts ...grpc.CallOption) (*MsgRedeemTokensForSharesResponse, error)
+	// TransferTokenizeShareRecord defines a method to transfer ownership of
+	// TokenizeShareRecord.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	TransferTokenizeShareRecord(ctx context.Context, in *MsgTransferTokenizeShareRecord, opts ...grpc.CallOption) (*MsgTransferTokenizeShareRecordResponse, error)
+	// DisableTokenizeShares defines a method to prevent the tokenization of an addresses stake.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	DisableTokenizeShares(ctx context.Context, in *MsgDisableTokenizeShares, opts ...grpc.CallOption) (*MsgDisableTokenizeSharesResponse, error)
+	// EnableTokenizeShares defines a method to re-enable the tokenization of an addresseses stake
+	// after it has been disabled.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	EnableTokenizeShares(ctx context.Context, in *MsgEnableTokenizeShares, opts ...grpc.CallOption) (*MsgEnableTokenizeSharesResponse, error)
+	// ValidatorBond defines a method for performing a validator self-bond.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	ValidatorBond(ctx context.Context, in *MsgValidatorBond, opts ...grpc.CallOption) (*MsgValidatorBondResponse, error)
 }
 
 type msgClient struct {
@@ -841,6 +1509,69 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
+func (c *msgClient) UnbondValidator(ctx context.Context, in *MsgUnbondValidator, opts ...grpc.CallOption) (*MsgUnbondValidatorResponse, error) {
+	out := new(MsgUnbondValidatorResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/UnbondValidator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) TokenizeShares(ctx context.Context, in *MsgTokenizeShares, opts ...grpc.CallOption) (*MsgTokenizeSharesResponse, error) {
+	out := new(MsgTokenizeSharesResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/TokenizeShares", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RedeemTokensForShares(ctx context.Context, in *MsgRedeemTokensForShares, opts ...grpc.CallOption) (*MsgRedeemTokensForSharesResponse, error) {
+	out := new(MsgRedeemTokensForSharesResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/RedeemTokensForShares", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) TransferTokenizeShareRecord(ctx context.Context, in *MsgTransferTokenizeShareRecord, opts ...grpc.CallOption) (*MsgTransferTokenizeShareRecordResponse, error) {
+	out := new(MsgTransferTokenizeShareRecordResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/TransferTokenizeShareRecord", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) DisableTokenizeShares(ctx context.Context, in *MsgDisableTokenizeShares, opts ...grpc.CallOption) (*MsgDisableTokenizeSharesResponse, error) {
+	out := new(MsgDisableTokenizeSharesResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/DisableTokenizeShares", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) EnableTokenizeShares(ctx context.Context, in *MsgEnableTokenizeShares, opts ...grpc.CallOption) (*MsgEnableTokenizeSharesResponse, error) {
+	out := new(MsgEnableTokenizeSharesResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/EnableTokenizeShares", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) ValidatorBond(ctx context.Context, in *MsgValidatorBond, opts ...grpc.CallOption) (*MsgValidatorBondResponse, error) {
+	out := new(MsgValidatorBondResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Msg/ValidatorBond", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// CreateValidator defines a method for creating a new validator.
@@ -862,6 +1593,38 @@ type MsgServer interface {
 	// UpdateParams defines an operation for updating the x/staking module
 	// parameters.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
+	// UnbondValidator defines a method for performing the status transition for a validator
+	// from bonded to unbonding.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	UnbondValidator(context.Context, *MsgUnbondValidator) (*MsgUnbondValidatorResponse, error)
+	// TokenizeShares defines a method for tokenizing shares from a validator.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	TokenizeShares(context.Context, *MsgTokenizeShares) (*MsgTokenizeSharesResponse, error)
+	// RedeemTokensForShares defines a method for redeeming tokens from a validator for
+	// shares.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	RedeemTokensForShares(context.Context, *MsgRedeemTokensForShares) (*MsgRedeemTokensForSharesResponse, error)
+	// TransferTokenizeShareRecord defines a method to transfer ownership of
+	// TokenizeShareRecord.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	TransferTokenizeShareRecord(context.Context, *MsgTransferTokenizeShareRecord) (*MsgTransferTokenizeShareRecordResponse, error)
+	// DisableTokenizeShares defines a method to prevent the tokenization of an addresses stake.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	DisableTokenizeShares(context.Context, *MsgDisableTokenizeShares) (*MsgDisableTokenizeSharesResponse, error)
+	// EnableTokenizeShares defines a method to re-enable the tokenization of an addresseses stake
+	// after it has been disabled.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	EnableTokenizeShares(context.Context, *MsgEnableTokenizeShares) (*MsgEnableTokenizeSharesResponse, error)
+	// ValidatorBond defines a method for performing a validator self-bond.
+	//
+	// Since: cosmos-sdk 0.47-lsm
+	ValidatorBond(context.Context, *MsgValidatorBond) (*MsgValidatorBondResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -888,6 +1651,27 @@ func (*UnimplementedMsgServer) CancelUnbondingDelegation(ctx context.Context, re
 }
 func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
+func (*UnimplementedMsgServer) UnbondValidator(ctx context.Context, req *MsgUnbondValidator) (*MsgUnbondValidatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnbondValidator not implemented")
+}
+func (*UnimplementedMsgServer) TokenizeShares(ctx context.Context, req *MsgTokenizeShares) (*MsgTokenizeSharesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TokenizeShares not implemented")
+}
+func (*UnimplementedMsgServer) RedeemTokensForShares(ctx context.Context, req *MsgRedeemTokensForShares) (*MsgRedeemTokensForSharesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RedeemTokensForShares not implemented")
+}
+func (*UnimplementedMsgServer) TransferTokenizeShareRecord(ctx context.Context, req *MsgTransferTokenizeShareRecord) (*MsgTransferTokenizeShareRecordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransferTokenizeShareRecord not implemented")
+}
+func (*UnimplementedMsgServer) DisableTokenizeShares(ctx context.Context, req *MsgDisableTokenizeShares) (*MsgDisableTokenizeSharesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DisableTokenizeShares not implemented")
+}
+func (*UnimplementedMsgServer) EnableTokenizeShares(ctx context.Context, req *MsgEnableTokenizeShares) (*MsgEnableTokenizeSharesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EnableTokenizeShares not implemented")
+}
+func (*UnimplementedMsgServer) ValidatorBond(ctx context.Context, req *MsgValidatorBond) (*MsgValidatorBondResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorBond not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -1020,6 +1804,132 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_UnbondValidator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUnbondValidator)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UnbondValidator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmos.staking.v1beta1.Msg/UnbondValidator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UnbondValidator(ctx, req.(*MsgUnbondValidator))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_TokenizeShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgTokenizeShares)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).TokenizeShares(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmos.staking.v1beta1.Msg/TokenizeShares",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).TokenizeShares(ctx, req.(*MsgTokenizeShares))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RedeemTokensForShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRedeemTokensForShares)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RedeemTokensForShares(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmos.staking.v1beta1.Msg/RedeemTokensForShares",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RedeemTokensForShares(ctx, req.(*MsgRedeemTokensForShares))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_TransferTokenizeShareRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgTransferTokenizeShareRecord)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).TransferTokenizeShareRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmos.staking.v1beta1.Msg/TransferTokenizeShareRecord",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).TransferTokenizeShareRecord(ctx, req.(*MsgTransferTokenizeShareRecord))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_DisableTokenizeShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDisableTokenizeShares)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).DisableTokenizeShares(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmos.staking.v1beta1.Msg/DisableTokenizeShares",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).DisableTokenizeShares(ctx, req.(*MsgDisableTokenizeShares))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_EnableTokenizeShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgEnableTokenizeShares)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).EnableTokenizeShares(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmos.staking.v1beta1.Msg/EnableTokenizeShares",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).EnableTokenizeShares(ctx, req.(*MsgEnableTokenizeShares))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_ValidatorBond_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgValidatorBond)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).ValidatorBond(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cosmos.staking.v1beta1.Msg/ValidatorBond",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).ValidatorBond(ctx, req.(*MsgValidatorBond))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var Msg_serviceDesc = _Msg_serviceDesc
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "cosmos.staking.v1beta1.Msg",
@@ -1052,6 +1962,34 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
+			MethodName: "UnbondValidator",
+			Handler:    _Msg_UnbondValidator_Handler,
+		},
+		{
+			MethodName: "TokenizeShares",
+			Handler:    _Msg_TokenizeShares_Handler,
+		},
+		{
+			MethodName: "RedeemTokensForShares",
+			Handler:    _Msg_RedeemTokensForShares_Handler,
+		},
+		{
+			MethodName: "TransferTokenizeShareRecord",
+			Handler:    _Msg_TransferTokenizeShareRecord_Handler,
+		},
+		{
+			MethodName: "DisableTokenizeShares",
+			Handler:    _Msg_DisableTokenizeShares_Handler,
+		},
+		{
+			MethodName: "EnableTokenizeShares",
+			Handler:    _Msg_EnableTokenizeShares_Handler,
+		},
+		{
+			MethodName: "ValidatorBond",
+			Handler:    _Msg_ValidatorBond_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1638,6 +2576,458 @@ func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgUnbondValidator) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUnbondValidator) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUnbondValidator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ValidatorAddress) > 0 {
+		i -= len(m.ValidatorAddress)
+		copy(dAtA[i:], m.ValidatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ValidatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUnbondValidatorResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUnbondValidatorResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUnbondValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgTokenizeShares) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgTokenizeShares) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgTokenizeShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TokenizedShareOwner) > 0 {
+		i -= len(m.TokenizedShareOwner)
+		copy(dAtA[i:], m.TokenizedShareOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.TokenizedShareOwner)))
+		i--
+		dAtA[i] = 0x22
+	}
+	{
+		size, err := m.Amount.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if len(m.ValidatorAddress) > 0 {
+		i -= len(m.ValidatorAddress)
+		copy(dAtA[i:], m.ValidatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ValidatorAddress)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.DelegatorAddress) > 0 {
+		i -= len(m.DelegatorAddress)
+		copy(dAtA[i:], m.DelegatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.DelegatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgTokenizeSharesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgTokenizeSharesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgTokenizeSharesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Amount.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRedeemTokensForShares) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRedeemTokensForShares) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRedeemTokensForShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Amount.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.DelegatorAddress) > 0 {
+		i -= len(m.DelegatorAddress)
+		copy(dAtA[i:], m.DelegatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.DelegatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRedeemTokensForSharesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRedeemTokensForSharesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRedeemTokensForSharesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Amount.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgTransferTokenizeShareRecord) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgTransferTokenizeShareRecord) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgTransferTokenizeShareRecord) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.NewOwner) > 0 {
+		i -= len(m.NewOwner)
+		copy(dAtA[i:], m.NewOwner)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.NewOwner)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.TokenizeShareRecordId != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.TokenizeShareRecordId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgTransferTokenizeShareRecordResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgTransferTokenizeShareRecordResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgTransferTokenizeShareRecordResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDisableTokenizeShares) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDisableTokenizeShares) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDisableTokenizeShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.DelegatorAddress) > 0 {
+		i -= len(m.DelegatorAddress)
+		copy(dAtA[i:], m.DelegatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.DelegatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDisableTokenizeSharesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDisableTokenizeSharesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDisableTokenizeSharesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgEnableTokenizeShares) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgEnableTokenizeShares) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgEnableTokenizeShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.DelegatorAddress) > 0 {
+		i -= len(m.DelegatorAddress)
+		copy(dAtA[i:], m.DelegatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.DelegatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgEnableTokenizeSharesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgEnableTokenizeSharesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgEnableTokenizeSharesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	n18, err18 := github_com_cosmos_gogoproto_types.StdTimeMarshalTo(m.CompletionTime, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdTime(m.CompletionTime):])
+	if err18 != nil {
+		return 0, err18
+	}
+	i -= n18
+	i = encodeVarintTx(dAtA, i, uint64(n18))
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgValidatorBond) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgValidatorBond) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgValidatorBond) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ValidatorAddress) > 0 {
+		i -= len(m.ValidatorAddress)
+		copy(dAtA[i:], m.ValidatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ValidatorAddress)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.DelegatorAddress) > 0 {
+		i -= len(m.DelegatorAddress)
+		copy(dAtA[i:], m.DelegatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.DelegatorAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgValidatorBondResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgValidatorBondResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgValidatorBondResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -1860,6 +3250,189 @@ func (m *MsgUpdateParams) Size() (n int) {
 }
 
 func (m *MsgUpdateParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgUnbondValidator) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ValidatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgUnbondValidatorResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgTokenizeShares) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.DelegatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ValidatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Amount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = len(m.TokenizedShareOwner)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgTokenizeSharesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.Amount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgRedeemTokensForShares) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.DelegatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Amount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgRedeemTokensForSharesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.Amount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgTransferTokenizeShareRecord) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.TokenizeShareRecordId != 0 {
+		n += 1 + sovTx(uint64(m.TokenizeShareRecordId))
+	}
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.NewOwner)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgTransferTokenizeShareRecordResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgDisableTokenizeShares) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.DelegatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgDisableTokenizeSharesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgEnableTokenizeShares) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.DelegatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgEnableTokenizeSharesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = github_com_cosmos_gogoproto_types.SizeOfStdTime(m.CompletionTime)
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgValidatorBond) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.DelegatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ValidatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgValidatorBondResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -3524,6 +5097,1242 @@ func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgUpdateParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUnbondValidator) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUnbondValidator: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUnbondValidator: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUnbondValidatorResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUnbondValidatorResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUnbondValidatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgTokenizeShares) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgTokenizeShares: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgTokenizeShares: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DelegatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DelegatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Amount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenizedShareOwner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TokenizedShareOwner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgTokenizeSharesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgTokenizeSharesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgTokenizeSharesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Amount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRedeemTokensForShares) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRedeemTokensForShares: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRedeemTokensForShares: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DelegatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DelegatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Amount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRedeemTokensForSharesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRedeemTokensForSharesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRedeemTokensForSharesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Amount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgTransferTokenizeShareRecord) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgTransferTokenizeShareRecord: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgTransferTokenizeShareRecord: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenizeShareRecordId", wireType)
+			}
+			m.TokenizeShareRecordId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.TokenizeShareRecordId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewOwner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NewOwner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgTransferTokenizeShareRecordResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgTransferTokenizeShareRecordResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgTransferTokenizeShareRecordResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDisableTokenizeShares) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDisableTokenizeShares: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDisableTokenizeShares: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DelegatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DelegatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDisableTokenizeSharesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDisableTokenizeSharesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDisableTokenizeSharesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgEnableTokenizeShares) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgEnableTokenizeShares: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgEnableTokenizeShares: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DelegatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DelegatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgEnableTokenizeSharesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgEnableTokenizeSharesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgEnableTokenizeSharesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CompletionTime", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := github_com_cosmos_gogoproto_types.StdTimeUnmarshal(&m.CompletionTime, dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgValidatorBond) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgValidatorBond: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgValidatorBond: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DelegatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DelegatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgValidatorBondResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgValidatorBondResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgValidatorBondResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
