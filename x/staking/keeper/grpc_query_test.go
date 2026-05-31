@@ -4,6 +4,9 @@ import (
 	gocontext "context"
 	"fmt"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -59,4 +62,14 @@ func (s *KeeperTestSuite) TestGRPCQueryValidator() {
 			}
 		})
 	}
+}
+
+func (s *KeeperTestSuite) TestTokenizeShareLockInfoInvalidAddressReturnsError() {
+	res, err := s.queryClient.TokenizeShareLockInfo(gocontext.Background(), &types.QueryTokenizeShareLockInfo{
+		Address: "not-a-bech32-address",
+	})
+
+	s.Require().Error(err)
+	s.Require().Equal(codes.InvalidArgument, status.Code(err))
+	s.Require().Nil(res)
 }

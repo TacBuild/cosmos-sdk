@@ -144,7 +144,7 @@ service Query {
   rpc TokenizeShareRecordByDenom(QueryTokenizeShareRecordByDenomRequest)
       returns (QueryTokenizeShareRecordByDenomResponse) {
     option (cosmos.query.v1.module_query_safe) = false;
-    option (google.api.http).get               = "/cosmos/staking/v1beta1/tokenize_share_record_by_denom/{denom}";
+    option (google.api.http).get               = "/cosmos/staking/v1beta1/tokenize_share_record_by_denom";
   }
 
   // Query tokenize share records by address.

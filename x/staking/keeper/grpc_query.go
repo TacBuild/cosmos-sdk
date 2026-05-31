@@ -814,7 +814,10 @@ func (k Querier) TokenizeShareLockInfo(c context.Context, req *types.QueryTokeni
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	address := sdk.MustAccAddressFromBech32(req.Address)
+	address, err := sdk.AccAddressFromBech32(req.Address)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
 	status, completionTime := k.GetTokenizeSharesLock(ctx, address)
 
 	timeString := ""

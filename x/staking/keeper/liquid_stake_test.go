@@ -1,14 +1,69 @@
 package keeper_test
 
 import (
+	"bytes"
+	"context"
+	"errors"
+	"time"
+
 	"go.uber.org/mock/gomock"
 
+	corestore "cosmossdk.io/core/store"
 	"cosmossdk.io/math"
+	storetypes "cosmossdk.io/store/types"
 
+	"github.com/cosmos/cosmos-sdk/codec/address"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 )
+
+var errDelegationIterator = errors.New("delegation iterator failed")
+
+type failingDelegationIteratorService struct {
+	key storetypes.StoreKey
+}
+
+func (s failingDelegationIteratorService) OpenKVStore(ctx context.Context) corestore.KVStore {
+	return failingDelegationIteratorStore{kvStore: sdk.UnwrapSDKContext(ctx).KVStore(s.key)}
+}
+
+type failingDelegationIteratorStore struct {
+	kvStore storetypes.KVStore
+}
+
+func (s failingDelegationIteratorStore) Get(key []byte) ([]byte, error) {
+	return s.kvStore.Get(key), nil
+}
+
+func (s failingDelegationIteratorStore) Has(key []byte) (bool, error) {
+	return s.kvStore.Has(key), nil
+}
+
+func (s failingDelegationIteratorStore) Set(key, value []byte) error {
+	s.kvStore.Set(key, value)
+	return nil
+}
+
+func (s failingDelegationIteratorStore) Delete(key []byte) error {
+	s.kvStore.Delete(key)
+	return nil
+}
+
+func (s failingDelegationIteratorStore) Iterator(start, end []byte) (corestore.Iterator, error) {
+	if bytes.Equal(start, types.DelegationKey) {
+		return nil, errDelegationIterator
+	}
+	return s.kvStore.Iterator(start, end), nil
+}
+
+func (s failingDelegationIteratorStore) ReverseIterator(start, end []byte) (corestore.Iterator, error) {
+	return s.kvStore.ReverseIterator(start, end), nil
+}
 
 // withBondedPoolBalance arranges the mocked bank keeper so that
 // TotalBondedTokens(...) returns the given amount of bond-denom tokens for
@@ -71,13 +126,19 @@ func (s *KeeperTestSuite) TestCheckExceedsValidatorBondCap() {
 
 	// disabled factor (-1) -> never exceeded
 	s.withCaps(math.LegacyOneDec(), math.LegacyOneDec(), types.ValidatorBondCapDisabled)
-	require.False(keeper.CheckExceedsValidatorBondCap(ctx, val, math.LegacyNewDec(1_000_000)))
+	exceeds, err := keeper.CheckExceedsValidatorBondCap(ctx, val, math.LegacyNewDec(1_000_000))
+	require.NoError(err)
+	require.False(exceeds)
 
 	// factor=2 -> max liquid shares = 200; 50 + 149 = 199 -> ok
 	s.withCaps(math.LegacyOneDec(), math.LegacyOneDec(), math.LegacyNewDec(2))
-	require.False(keeper.CheckExceedsValidatorBondCap(ctx, val, math.LegacyNewDec(149)))
+	exceeds, err = keeper.CheckExceedsValidatorBondCap(ctx, val, math.LegacyNewDec(149))
+	require.NoError(err)
+	require.False(exceeds)
 	// 50 + 151 = 201 -> exceeded
-	require.True(keeper.CheckExceedsValidatorBondCap(ctx, val, math.LegacyNewDec(151)))
+	exceeds, err = keeper.CheckExceedsValidatorBondCap(ctx, val, math.LegacyNewDec(151))
+	require.NoError(err)
+	require.True(exceeds)
 }
 
 // ---------------------------------------------------------------------------
@@ -99,16 +160,24 @@ func (s *KeeperTestSuite) TestCheckExceedsValidatorLiquidStakingCap() {
 	s.withCaps(math.LegacyOneDec(), math.LegacyNewDecWithPrec(25, 2), types.ValidatorBondCapDisabled)
 
 	// not bonded yet: adding 100 -> liquid=200, total=1100, 200/1100 ≈ 18% < 25%
-	require.False(keeper.CheckExceedsValidatorLiquidStakingCap(ctx, val, math.LegacyNewDec(100), false))
+	exceeds, err := keeper.CheckExceedsValidatorLiquidStakingCap(ctx, val, math.LegacyNewDec(100), false)
+	require.NoError(err)
+	require.False(exceeds)
 
 	// not bonded yet: adding 400 -> liquid=500, total=1400, 500/1400 ≈ 35.7% > 25%
-	require.True(keeper.CheckExceedsValidatorLiquidStakingCap(ctx, val, math.LegacyNewDec(400), false))
+	exceeds, err = keeper.CheckExceedsValidatorLiquidStakingCap(ctx, val, math.LegacyNewDec(400), false)
+	require.NoError(err)
+	require.True(exceeds)
 
 	// already bonded (total unchanged): adding 200 -> liquid=300/1000 = 30% > 25%
-	require.True(keeper.CheckExceedsValidatorLiquidStakingCap(ctx, val, math.LegacyNewDec(200), true))
+	exceeds, err = keeper.CheckExceedsValidatorLiquidStakingCap(ctx, val, math.LegacyNewDec(200), true)
+	require.NoError(err)
+	require.True(exceeds)
 
 	// already bonded: adding 100 -> liquid=200/1000 = 20% < 25%
-	require.False(keeper.CheckExceedsValidatorLiquidStakingCap(ctx, val, math.LegacyNewDec(100), true))
+	exceeds, err = keeper.CheckExceedsValidatorLiquidStakingCap(ctx, val, math.LegacyNewDec(100), true)
+	require.NoError(err)
+	require.False(exceeds)
 }
 
 // ---------------------------------------------------------------------------
@@ -125,16 +194,93 @@ func (s *KeeperTestSuite) TestCheckExceedsGlobalLiquidStakingCap() {
 	s.withCaps(math.LegacyNewDecWithPrec(25, 2), math.LegacyOneDec(), types.ValidatorBondCapDisabled)
 
 	// not bonded yet: liquid=100+100=200, total=1000+100=1100, 200/1100≈18% < 25%
-	require.False(keeper.CheckExceedsGlobalLiquidStakingCap(ctx, math.NewInt(100), false))
+	exceeds, err := keeper.CheckExceedsGlobalLiquidStakingCap(ctx, math.NewInt(100), false)
+	require.NoError(err)
+	require.False(exceeds)
 
 	// not bonded yet: liquid=600, total=1500, 600/1500=40% > 25%
-	require.True(keeper.CheckExceedsGlobalLiquidStakingCap(ctx, math.NewInt(500), false))
+	exceeds, err = keeper.CheckExceedsGlobalLiquidStakingCap(ctx, math.NewInt(500), false)
+	require.NoError(err)
+	require.True(exceeds)
 
 	// already bonded (total unchanged): liquid=300/1000 = 30% > 25%
-	require.True(keeper.CheckExceedsGlobalLiquidStakingCap(ctx, math.NewInt(200), true))
+	exceeds, err = keeper.CheckExceedsGlobalLiquidStakingCap(ctx, math.NewInt(200), true)
+	require.NoError(err)
+	require.True(exceeds)
 
 	// already bonded: liquid=200/1000 = 20% < 25%
-	require.False(keeper.CheckExceedsGlobalLiquidStakingCap(ctx, math.NewInt(100), true))
+	exceeds, err = keeper.CheckExceedsGlobalLiquidStakingCap(ctx, math.NewInt(100), true)
+	require.NoError(err)
+	require.False(exceeds)
+}
+
+func (s *KeeperTestSuite) TestSafelyIncreaseTotalLiquidStakedTokensZeroBondedPoolFailsClosed() {
+	ctx, keeper := s.ctx, s.stakingKeeper
+	require := s.Require()
+
+	s.withBondedPoolBalance(math.ZeroInt())
+	keeper.SetTotalLiquidStakedTokens(ctx, math.ZeroInt())
+	s.withCaps(math.LegacyOneDec(), math.LegacyOneDec(), types.ValidatorBondCapDisabled)
+
+	err := keeper.SafelyIncreaseTotalLiquidStakedTokens(ctx, math.NewInt(1), true)
+	require.ErrorIs(err, types.ErrGlobalLiquidStakingCapExceeded)
+	require.True(keeper.GetTotalLiquidStakedTokens(ctx).IsZero())
+}
+
+func (s *KeeperTestSuite) TestSafelyIncreaseTotalLiquidStakedTokensPropagatesCapReadError() {
+	ctx, keeper := s.ctx, s.stakingKeeper
+	require := s.Require()
+
+	keeper.SetTotalLiquidStakedTokens(ctx, math.ZeroInt())
+	ctx.KVStore(s.storeKey).Set(types.ParamsKey, []byte{0x01, 0x02})
+
+	err := keeper.SafelyIncreaseTotalLiquidStakedTokens(ctx, math.NewInt(1), true)
+	require.Error(err)
+	require.True(keeper.GetTotalLiquidStakedTokens(ctx).IsZero())
+}
+
+func (s *KeeperTestSuite) TestSafelyIncreaseValidatorLiquidSharesZeroDelegatorSharesFailsClosed() {
+	ctx, keeper := s.ctx, s.stakingKeeper
+	require := s.Require()
+
+	val := s.makeValidatorWithShares(0,
+		math.LegacyZeroDec(),
+		math.LegacyZeroDec(),
+		math.LegacyZeroDec(),
+	)
+	s.withCaps(math.LegacyOneDec(), math.LegacyOneDec(), types.ValidatorBondCapDisabled)
+
+	valAddr, err := sdk.ValAddressFromBech32(val.GetOperator())
+	require.NoError(err)
+
+	_, err = keeper.SafelyIncreaseValidatorLiquidShares(ctx, valAddr, math.LegacyNewDec(1), true)
+	require.ErrorIs(err, types.ErrValidatorLiquidStakingCapExceeded)
+
+	stored, err := keeper.GetValidator(ctx, valAddr)
+	require.NoError(err)
+	require.True(stored.LiquidShares.IsZero())
+}
+
+func (s *KeeperTestSuite) TestSafelyIncreaseValidatorLiquidSharesPropagatesCapReadError() {
+	ctx, keeper := s.ctx, s.stakingKeeper
+	require := s.Require()
+
+	val := s.makeValidatorWithShares(0,
+		math.LegacyNewDec(1000),
+		math.LegacyZeroDec(),
+		math.LegacyZeroDec(),
+	)
+	ctx.KVStore(s.storeKey).Set(types.ParamsKey, []byte{0x01, 0x02})
+
+	valAddr, err := sdk.ValAddressFromBech32(val.GetOperator())
+	require.NoError(err)
+
+	_, err = keeper.SafelyIncreaseValidatorLiquidShares(ctx, valAddr, math.LegacyNewDec(1), true)
+	require.Error(err)
+
+	stored, err := keeper.GetValidator(ctx, valAddr)
+	require.NoError(err)
+	require.True(stored.LiquidShares.IsZero())
 }
 
 // ---------------------------------------------------------------------------
@@ -237,6 +383,30 @@ func (s *KeeperTestSuite) TestSafelyIncreaseValidatorLiquidShares_Happy() {
 	require.True(stored.LiquidShares.Equal(math.LegacyNewDec(150)))
 }
 
+func (s *KeeperTestSuite) TestRefreshTotalLiquidStakedPropagatesDelegationIteratorError() {
+	ctx := s.ctx
+	require := s.Require()
+
+	s.stakingKeeper.SetTotalLiquidStakedTokens(ctx, math.NewInt(77))
+	s.accountKeeper.EXPECT().GetModuleAddress(types.BondedPoolName).Return(bondedAcc.GetAddress())
+	s.accountKeeper.EXPECT().GetModuleAddress(types.NotBondedPoolName).Return(notBondedAcc.GetAddress())
+
+	keeper := stakingkeeper.NewKeeper(
+		s.cdc,
+		failingDelegationIteratorService{key: s.storeKey},
+		s.accountKeeper,
+		s.bankKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		address.NewBech32Codec("cosmosvaloper"),
+		address.NewBech32Codec("cosmosvalcons"),
+	)
+
+	err := keeper.RefreshTotalLiquidStaked(ctx)
+
+	require.ErrorIs(err, errDelegationIterator)
+	require.Equal(math.NewInt(77), s.stakingKeeper.GetTotalLiquidStakedTokens(ctx))
+}
+
 // ---------------------------------------------------------------------------
 // DecreaseValidatorLiquidShares: underflow + happy
 // ---------------------------------------------------------------------------
@@ -315,4 +485,47 @@ func (s *KeeperTestSuite) TestValidatorBondShares() {
 	stored, err = keeper.GetValidator(ctx, valAddr)
 	require.NoError(err)
 	require.True(stored.ValidatorBondShares.IsZero())
+}
+
+func (s *KeeperTestSuite) TestBeginBlockerRemovesExpiredTokenizeShareLocks() {
+	blockTime := time.Date(2026, 5, 12, 12, 0, 0, 0, time.UTC)
+	ctx := s.ctx.WithBlockTime(blockTime).WithBlockHeight(10)
+	keeper := s.stakingKeeper
+	require := s.Require()
+
+	addrs := simtestutil.CreateIncrementalAccounts(3)
+	pastCompletion := blockTime.Add(-time.Hour)
+	currentCompletion := blockTime
+	futureCompletion := blockTime.Add(time.Hour)
+
+	testCases := []struct {
+		address        sdk.AccAddress
+		completionTime time.Time
+	}{
+		{address: addrs[0], completionTime: pastCompletion},
+		{address: addrs[1], completionTime: currentCompletion},
+		{address: addrs[2], completionTime: futureCompletion},
+	}
+
+	for _, tc := range testCases {
+		keeper.SetPendingTokenizeShareAuthorizations(ctx, tc.completionTime, types.PendingTokenizeShareAuthorizations{
+			Addresses: []string{tc.address.String()},
+		})
+		keeper.SetTokenizeSharesUnlockTime(ctx, tc.address, tc.completionTime)
+	}
+
+	require.NoError(keeper.BeginBlocker(ctx))
+
+	status, _ := keeper.GetTokenizeSharesLock(ctx, addrs[0])
+	require.Equal(types.ShareLockStatusUnlocked, status)
+	require.Empty(keeper.GetPendingTokenizeShareAuthorizations(ctx, pastCompletion).Addresses)
+
+	status, _ = keeper.GetTokenizeSharesLock(ctx, addrs[1])
+	require.Equal(types.ShareLockStatusUnlocked, status)
+	require.Empty(keeper.GetPendingTokenizeShareAuthorizations(ctx, currentCompletion).Addresses)
+
+	status, unlockTime := keeper.GetTokenizeSharesLock(ctx, addrs[2])
+	require.Equal(types.ShareLockStatusLockExpiring, status)
+	require.True(unlockTime.Equal(futureCompletion))
+	require.Equal([]string{addrs[2].String()}, keeper.GetPendingTokenizeShareAuthorizations(ctx, futureCompletion).Addresses)
 }

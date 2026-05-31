@@ -128,6 +128,18 @@ func (p Params) Validate() error {
 		return err
 	}
 
+	if err := validateValidatorBondFactor(p.ValidatorBondFactor); err != nil {
+		return err
+	}
+
+	if err := validateGlobalLiquidStakingCap(p.GlobalLiquidStakingCap); err != nil {
+		return err
+	}
+
+	if err := validateValidatorLiquidStakingCap(p.ValidatorLiquidStakingCap); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -223,6 +235,60 @@ func validateMinCommissionRate(i any) error {
 	}
 	if v.GT(math.LegacyOneDec()) {
 		return fmt.Errorf("minimum commission rate cannot be greater than 100%%: %s", v)
+	}
+
+	return nil
+}
+
+func validateValidatorBondFactor(i any) error {
+	v, ok := i.(math.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNil() {
+		return fmt.Errorf("validator bond factor cannot be nil: %s", v)
+	}
+	if v.IsNegative() && !v.Equal(ValidatorBondCapDisabled) {
+		return fmt.Errorf("invalid validator bond factor: %s", v)
+	}
+
+	return nil
+}
+
+func validateGlobalLiquidStakingCap(i any) error {
+	v, ok := i.(math.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNil() {
+		return fmt.Errorf("global liquid staking cap cannot be nil: %s", v)
+	}
+	if v.IsNegative() {
+		return fmt.Errorf("global liquid staking cap cannot be negative: %s", v)
+	}
+	if v.GT(math.LegacyOneDec()) {
+		return fmt.Errorf("global liquid staking cap cannot be greater than 100%%: %s", v)
+	}
+
+	return nil
+}
+
+func validateValidatorLiquidStakingCap(i any) error {
+	v, ok := i.(math.LegacyDec)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.IsNil() {
+		return fmt.Errorf("validator liquid staking cap cannot be nil: %s", v)
+	}
+	if v.IsNegative() {
+		return fmt.Errorf("validator liquid staking cap cannot be negative: %s", v)
+	}
+	if v.GT(math.LegacyOneDec()) {
+		return fmt.Errorf("validator liquid staking cap cannot be greater than 100%%: %s", v)
 	}
 
 	return nil

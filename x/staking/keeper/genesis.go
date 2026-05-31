@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"time"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
@@ -135,6 +136,51 @@ func (k Keeper) InitGenesis(ctx context.Context, data *types.GenesisState) (res 
 				panic(err)
 			}
 		}
+	}
+
+	latestTokenizeShareRecordID := uint64(0)
+	for _, record := range data.TokenizeShareRecords {
+		if err := k.AddTokenizeShareRecord(ctx, record); err != nil {
+			panic(err)
+		}
+		if record.Id > latestTokenizeShareRecordID {
+			latestTokenizeShareRecordID = record.Id
+		}
+	}
+
+	if data.LastTokenizeShareRecordId < latestTokenizeShareRecordID {
+		panic("Tokenize share record specified with ID greater than the latest ID")
+	}
+
+	k.SetLastTokenizeShareRecordID(sdkCtx, data.LastTokenizeShareRecordId)
+	k.SetTotalLiquidStakedTokens(sdkCtx, data.TotalLiquidStakedTokens)
+
+	pendingUnlocks := map[time.Time][]string{}
+	for _, lock := range data.TokenizeShareLocks {
+		address, err := sdk.AccAddressFromBech32(lock.Address)
+		if err != nil {
+			panic(err)
+		}
+
+		switch lock.Status {
+		case types.ShareLockStatusLocked.String():
+			k.AddTokenizeSharesLock(sdkCtx, address)
+		case types.ShareLockStatusLockExpiring.String():
+			k.SetTokenizeSharesUnlockTime(sdkCtx, address, lock.CompletionTime)
+			pendingUnlocks[lock.CompletionTime] = append(pendingUnlocks[lock.CompletionTime], lock.Address)
+		case "", types.ShareLockStatusUnlocked.String():
+			// no-op: unlocked accounts are not represented in store
+		default:
+			panic(fmt.Sprintf("invalid tokenize share lock status: %s", lock.Status))
+		}
+	}
+
+	for completionTime, addresses := range pendingUnlocks {
+		k.SetPendingTokenizeShareAuthorizations(
+			sdkCtx,
+			completionTime,
+			types.PendingTokenizeShareAuthorizations{Addresses: addresses},
+		)
 	}
 
 	bondedCoins := sdk.NewCoins(sdk.NewCoin(data.Params.BondDenom, bondedTokens))

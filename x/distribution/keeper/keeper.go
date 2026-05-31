@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	goerrors "errors"
 	"fmt"
 
 	"cosmossdk.io/collections"
@@ -13,6 +14,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/distribution/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 // Keeper of the distribution store
@@ -278,9 +280,16 @@ func (k Keeper) WithdrawSingleShareRecordReward(ctx sdk.Context, recordID uint64
 
 	val, err := k.stakingKeeper.Validator(ctx, valAddr)
 	if err != nil {
-		return err
+		if !goerrors.Is(err, stakingtypes.ErrNoValidatorFound) {
+			return err
+		}
 	}
-	del, _ := k.stakingKeeper.Delegation(ctx, record.GetModuleAddress(), valAddr)
+	del, err := k.stakingKeeper.Delegation(ctx, record.GetModuleAddress(), valAddr)
+	if err != nil {
+		if !goerrors.Is(err, stakingtypes.ErrNoDelegation) {
+			return err
+		}
+	}
 	if val != nil && del != nil {
 		// withdraw rewards into reward module account and send it to reward owner
 		cacheCtx, write := ctx.CacheContext()
@@ -331,7 +340,7 @@ func (k Keeper) WithdrawTokenizeShareRecordReward(ctx sdk.Context, ownerAddr sdk
 		return nil, err
 	}
 	if val == nil {
-		return nil, err
+		return nil, errorsmod.Wrapf(types.ErrNoValidatorExists, record.Validator)
 	}
 
 	del, err := k.stakingKeeper.Delegation(ctx, record.GetModuleAddress(), valAddr)
@@ -339,7 +348,7 @@ func (k Keeper) WithdrawTokenizeShareRecordReward(ctx sdk.Context, ownerAddr sdk
 		return nil, err
 	}
 	if del == nil {
-		return nil, err
+		return nil, errorsmod.Wrapf(types.ErrNoDelegationExists, record.GetModuleAddress().String())
 	}
 
 	// withdraw rewards into reward module account and send it to reward owner

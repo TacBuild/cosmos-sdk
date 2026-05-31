@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	errorsmod "cosmossdk.io/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 )
@@ -21,31 +19,4 @@ func (r TokenizeShareRecord) GetModuleAddress() sdk.AccAddress {
 
 func (r TokenizeShareRecord) GetShareTokenDenom() string {
 	return fmt.Sprintf("%s/%s", strings.ToLower(r.Validator), strconv.FormatUint(r.Id, 10))
-}
-
-func ParseShareTokenDenom(denom string) (TokenizeShareRecord, error) {
-	record := TokenizeShareRecord{}
-
-	denomParts := strings.Split(denom, "/")
-	if partsLen := len(denomParts); partsLen != 2 {
-		err := fmt.Errorf("wrong number of segments in share token denom: %d (expected 2)", partsLen)
-		return record, err
-	}
-
-	valAddress, err := sdk.ValAddressFromBech32(denomParts[0])
-	if err != nil {
-		err = errorsmod.Wrap(err, "failed to parse val address part")
-		return record, err
-	}
-
-	recordID, err := strconv.ParseUint(denomParts[1], 10, 64)
-	if err != nil {
-		err = errorsmod.Wrap(err, "failed to parse recordId part")
-		return record, err
-	}
-
-	record.Validator = valAddress.String()
-	record.ModuleAccount = fmt.Sprintf("%s%d", TokenizeShareModuleAccountPrefix, recordID)
-
-	return record, nil
 }

@@ -20,6 +20,13 @@ var (
 	_ sdk.Msg                            = &MsgBeginRedelegate{}
 	_ sdk.Msg                            = &MsgCancelUnbondingDelegation{}
 	_ sdk.Msg                            = &MsgUpdateParams{}
+	_ sdk.Msg                            = &MsgValidatorBond{}
+	_ sdk.Msg                            = &MsgUnbondValidator{}
+	_ sdk.Msg                            = &MsgTokenizeShares{}
+	_ sdk.Msg                            = &MsgRedeemTokensForShares{}
+	_ sdk.Msg                            = &MsgTransferTokenizeShareRecord{}
+	_ sdk.Msg                            = &MsgDisableTokenizeShares{}
+	_ sdk.Msg                            = &MsgEnableTokenizeShares{}
 )
 
 // NewMsgCreateValidator creates a new MsgCreateValidator instance.

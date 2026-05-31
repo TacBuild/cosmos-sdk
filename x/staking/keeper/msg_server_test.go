@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"bytes"
 	"testing"
 	"time"
 
@@ -13,6 +14,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	stakingtestutil "github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
@@ -25,6 +28,215 @@ var (
 func (s *KeeperTestSuite) execExpectCalls() {
 	s.accountKeeper.EXPECT().AddressCodec().Return(address.NewBech32Codec("cosmos")).AnyTimes()
 	s.bankKeeper.EXPECT().DelegateCoinsFromAccountToModule(gomock.Any(), Addr, stakingtypes.NotBondedPoolName, gomock.Any()).AnyTimes()
+}
+
+func liquidStakerAddress(seed byte) sdk.AccAddress {
+	return sdk.AccAddress(bytes.Repeat([]byte{seed}, 32))
+}
+
+func (s *KeeperTestSuite) setValidatorState(
+	validator stakingtypes.Validator,
+	tokens math.Int,
+	delegatorShares math.LegacyDec,
+	liquidShares math.LegacyDec,
+	validatorBondShares math.LegacyDec,
+) stakingtypes.Validator {
+	validator.Tokens = tokens
+	validator.DelegatorShares = delegatorShares
+	validator.LiquidShares = liquidShares
+	validator.ValidatorBondShares = validatorBondShares
+	s.Require().NoError(s.stakingKeeper.SetValidator(s.ctx, validator))
+	return validator
+}
+
+func (s *KeeperTestSuite) TestMsgUnbondValidatorAlreadyJailedReturnsError() {
+	ctx, msgServer := s.ctx, s.msgServer
+	require := s.Require()
+
+	validator := stakingtestutil.NewValidator(s.T(), ValAddr, PKS[0])
+	validator.Jailed = true
+	require.NoError(s.stakingKeeper.SetValidator(ctx, validator))
+
+	res, err := msgServer.UnbondValidator(ctx, &stakingtypes.MsgUnbondValidator{
+		ValidatorAddress: ValAddr.String(),
+	})
+
+	require.ErrorIs(err, stakingtypes.ErrValidatorJailed)
+	require.Nil(res)
+}
+
+func (s *KeeperTestSuite) TestMsgRedeemTokensForSharesMissingModuleDelegationReturnsNoDelegation() {
+	ctx, msgServer := s.ctx, s.msgServer
+	require := s.Require()
+
+	validator := stakingtestutil.NewValidator(s.T(), ValAddr, PKS[0])
+	require.NoError(s.stakingKeeper.SetValidator(ctx, validator))
+
+	record := makeRecord(1)
+	record.Owner = Addr.String()
+	record.Validator = ValAddr.String()
+	require.NoError(s.stakingKeeper.AddTokenizeShareRecord(ctx, record))
+
+	denom := record.GetShareTokenDenom()
+	amount := sdk.NewCoin(denom, math.NewInt(1))
+	s.bankKeeper.EXPECT().GetBalance(gomock.Any(), Addr, denom).Return(amount).AnyTimes()
+
+	res, err := msgServer.RedeemTokensForShares(ctx, &stakingtypes.MsgRedeemTokensForShares{
+		DelegatorAddress: Addr.String(),
+		Amount:           amount,
+	})
+
+	require.ErrorIs(err, stakingtypes.ErrNoDelegation)
+	require.Nil(res)
+}
+
+func (s *KeeperTestSuite) TestMsgDisableTokenizeSharesInvalidAddressReturnsError() {
+	res, err := s.msgServer.DisableTokenizeShares(s.ctx, &stakingtypes.MsgDisableTokenizeShares{
+		DelegatorAddress: "not-a-bech32-address",
+	})
+
+	s.Require().ErrorIs(err, sdkerrors.ErrInvalidAddress)
+	s.Require().Nil(res)
+}
+
+func (s *KeeperTestSuite) TestMsgEnableTokenizeSharesInvalidAddressReturnsError() {
+	res, err := s.msgServer.EnableTokenizeShares(s.ctx, &stakingtypes.MsgEnableTokenizeShares{
+		DelegatorAddress: "not-a-bech32-address",
+	})
+
+	s.Require().ErrorIs(err, sdkerrors.ErrInvalidAddress)
+	s.Require().Nil(res)
+}
+
+func (s *KeeperTestSuite) TestMsgTokenizeSharesRejectsInvalidAmount() {
+	require := s.Require()
+
+	validator := stakingtestutil.NewValidator(s.T(), ValAddr, PKS[0])
+	require.NoError(s.stakingKeeper.SetValidator(s.ctx, validator))
+
+	testCases := []struct {
+		name   string
+		amount sdk.Coin
+	}{
+		{
+			name:   "zero",
+			amount: sdk.NewCoin(sdk.DefaultBondDenom, math.ZeroInt()),
+		},
+		{
+			name: "negative",
+			amount: sdk.Coin{
+				Denom:  sdk.DefaultBondDenom,
+				Amount: math.NewInt(-1),
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		s.Run(tc.name, func() {
+			res, err := s.msgServer.TokenizeShares(s.ctx, &stakingtypes.MsgTokenizeShares{
+				DelegatorAddress:    Addr.String(),
+				ValidatorAddress:    ValAddr.String(),
+				Amount:              tc.amount,
+				TokenizedShareOwner: Addr.String(),
+			})
+
+			require.ErrorIs(err, sdkerrors.ErrInvalidRequest)
+			require.Nil(res)
+		})
+	}
+}
+
+func (s *KeeperTestSuite) TestMsgTokenizeSharesRejectsInvalidShareOwner() {
+	require := s.Require()
+
+	validator := stakingtestutil.NewValidator(s.T(), ValAddr, PKS[0])
+	require.NoError(s.stakingKeeper.SetValidator(s.ctx, validator))
+
+	res, err := s.msgServer.TokenizeShares(s.ctx, &stakingtypes.MsgTokenizeShares{
+		DelegatorAddress:    Addr.String(),
+		ValidatorAddress:    ValAddr.String(),
+		Amount:              sdk.NewCoin(sdk.DefaultBondDenom, math.NewInt(1)),
+		TokenizedShareOwner: "not-a-bech32-address",
+	})
+
+	require.ErrorIs(err, sdkerrors.ErrInvalidAddress)
+	require.Nil(res)
+}
+
+func (s *KeeperTestSuite) TestMsgTokenizeSharesRejectsZeroShareTokenMintBeforeMutation() {
+	ctx := s.ctx
+	require := s.Require()
+
+	validator := stakingtestutil.NewValidator(s.T(), ValAddr, PKS[0])
+	validator.Tokens = math.NewInt(10)
+	validator.DelegatorShares = math.LegacyOneDec()
+	require.NoError(s.stakingKeeper.SetValidator(ctx, validator))
+	require.NoError(s.stakingKeeper.SetDelegation(ctx, stakingtypes.NewDelegation(
+		Addr.String(),
+		ValAddr.String(),
+		math.LegacyOneDec(),
+	)))
+	s.stakingKeeper.SetTotalLiquidStakedTokens(ctx, math.ZeroInt())
+
+	s.accountKeeper.EXPECT().GetAccount(gomock.Any(), Addr).Return(nil).AnyTimes()
+	s.withBondedPoolBalance(math.NewInt(10))
+	s.bankKeeper.EXPECT().
+		UndelegateCoinsFromModuleToAccount(gomock.Any(), stakingtypes.NotBondedPoolName, Addr, gomock.Any()).
+		Return(nil).
+		AnyTimes()
+
+	res, err := s.msgServer.TokenizeShares(ctx, &stakingtypes.MsgTokenizeShares{
+		DelegatorAddress:    Addr.String(),
+		ValidatorAddress:    ValAddr.String(),
+		Amount:              sdk.NewCoin(sdk.DefaultBondDenom, math.NewInt(1)),
+		TokenizedShareOwner: Addr.String(),
+	})
+
+	require.ErrorIs(err, stakingtypes.ErrInsufficientShares)
+	require.Nil(res)
+	require.Equal(uint64(0), s.stakingKeeper.GetLastTokenizeShareRecordID(ctx))
+	require.True(s.stakingKeeper.GetTotalLiquidStakedTokens(ctx).IsZero())
+
+	storedDelegation, err := s.stakingKeeper.GetDelegation(ctx, Addr, ValAddr)
+	require.NoError(err)
+	require.True(storedDelegation.Shares.Equal(math.LegacyOneDec()))
+
+	storedValidator, err := s.stakingKeeper.GetValidator(ctx, ValAddr)
+	require.NoError(err)
+	require.Equal(math.NewInt(10), storedValidator.Tokens)
+	require.True(storedValidator.DelegatorShares.Equal(math.LegacyOneDec()))
+	require.True(storedValidator.LiquidShares.IsZero())
+}
+
+func (s *KeeperTestSuite) TestMsgRedeemTokensForSharesRejectsInvalidAmount() {
+	testCases := []struct {
+		name   string
+		amount sdk.Coin
+	}{
+		{
+			name:   "zero",
+			amount: sdk.NewCoin(sdk.DefaultBondDenom, math.ZeroInt()),
+		},
+		{
+			name: "negative",
+			amount: sdk.Coin{
+				Denom:  sdk.DefaultBondDenom,
+				Amount: math.NewInt(-1),
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		s.Run(tc.name, func() {
+			res, err := s.msgServer.RedeemTokensForShares(s.ctx, &stakingtypes.MsgRedeemTokensForShares{
+				DelegatorAddress: Addr.String(),
+				Amount:           tc.amount,
+			})
+
+			s.Require().ErrorIs(err, sdkerrors.ErrInvalidRequest)
+			s.Require().Nil(res)
+		})
+	}
 }
 
 func (s *KeeperTestSuite) TestMsgCreateValidator() {
@@ -630,6 +842,17 @@ func (s *KeeperTestSuite) TestMsgBeginRedelegate() {
 			expErrMsg: "validator does not exist",
 		},
 		{
+			name: "destination validator does not exist",
+			input: &stakingtypes.MsgBeginRedelegate{
+				DelegatorAddress:    Addr.String(),
+				ValidatorSrcAddress: srcValAddr.String(),
+				ValidatorDstAddress: sdk.ValAddress(PKS[2].Address()).String(),
+				Amount:              sdk.NewCoin(sdk.DefaultBondDenom, shares.RoundInt()),
+			},
+			expErr:    true,
+			expErrMsg: "redelegation destination validator not found",
+		},
+		{
 			name: "self redelegation",
 			input: &stakingtypes.MsgBeginRedelegate{
 				DelegatorAddress:    Addr.String(),
@@ -696,6 +919,89 @@ func (s *KeeperTestSuite) TestMsgBeginRedelegate() {
 			}
 		})
 	}
+}
+
+func (s *KeeperTestSuite) TestMsgBeginRedelegateLiquidStakerMovesLiquidShares() {
+	ctx, keeper, msgServer := s.ctx, s.stakingKeeper, s.msgServer
+	require := s.Require()
+
+	_, valAddrs := createValAddrs(2)
+	srcValAddr := valAddrs[0]
+	dstValAddr := valAddrs[1]
+	lspAddr := liquidStakerAddress(1)
+
+	shares := math.LegacyNewDec(100)
+	liquidShares := math.LegacyNewDec(100)
+	redelegatedTokens := math.NewInt(40)
+
+	srcValidator := stakingtestutil.NewValidator(s.T(), srcValAddr, PKs[0])
+	s.setValidatorState(srcValidator, math.NewInt(100), shares, liquidShares, math.LegacyZeroDec())
+
+	dstValidator := stakingtestutil.NewValidator(s.T(), dstValAddr, PKs[1])
+	s.setValidatorState(dstValidator, math.NewInt(100), shares, math.LegacyZeroDec(), math.LegacyZeroDec())
+
+	require.NoError(keeper.SetDelegation(ctx, stakingtypes.NewDelegation(
+		lspAddr.String(),
+		srcValAddr.String(),
+		shares,
+	)))
+	keeper.SetTotalLiquidStakedTokens(ctx, math.NewInt(100))
+
+	_, err := msgServer.BeginRedelegate(ctx, stakingtypes.NewMsgBeginRedelegate(
+		lspAddr.String(),
+		srcValAddr.String(),
+		dstValAddr.String(),
+		sdk.NewCoin(sdk.DefaultBondDenom, redelegatedTokens),
+	))
+	require.NoError(err)
+
+	storedSrc, err := keeper.GetValidator(ctx, srcValAddr)
+	require.NoError(err)
+	require.True(storedSrc.LiquidShares.Equal(math.LegacyNewDec(60)))
+
+	storedDst, err := keeper.GetValidator(ctx, dstValAddr)
+	require.NoError(err)
+	require.True(storedDst.LiquidShares.Equal(math.LegacyNewDec(40)))
+	require.Equal(math.NewInt(100), keeper.GetTotalLiquidStakedTokens(ctx))
+}
+
+func (s *KeeperTestSuite) TestMsgBeginRedelegateValidatorBondDecreasesSourceBondShares() {
+	ctx, keeper, msgServer := s.ctx, s.stakingKeeper, s.msgServer
+	require := s.Require()
+
+	delAddrs, valAddrs := createValAddrs(3)
+	delegatorAddr := delAddrs[2]
+	srcValAddr := valAddrs[0]
+	dstValAddr := valAddrs[1]
+
+	shares := math.LegacyNewDec(100)
+	redelegatedTokens := math.NewInt(40)
+
+	srcValidator := stakingtestutil.NewValidator(s.T(), srcValAddr, PKs[0])
+	s.setValidatorState(srcValidator, math.NewInt(100), shares, math.LegacyZeroDec(), shares)
+
+	dstValidator := stakingtestutil.NewValidator(s.T(), dstValAddr, PKs[1])
+	s.setValidatorState(dstValidator, math.NewInt(100), shares, math.LegacyZeroDec(), math.LegacyZeroDec())
+
+	delegation := stakingtypes.NewDelegation(delegatorAddr.String(), srcValAddr.String(), shares)
+	delegation.ValidatorBond = true
+	require.NoError(keeper.SetDelegation(ctx, delegation))
+
+	_, err := msgServer.BeginRedelegate(ctx, stakingtypes.NewMsgBeginRedelegate(
+		delegatorAddr.String(),
+		srcValAddr.String(),
+		dstValAddr.String(),
+		sdk.NewCoin(sdk.DefaultBondDenom, redelegatedTokens),
+	))
+	require.NoError(err)
+
+	storedSrc, err := keeper.GetValidator(ctx, srcValAddr)
+	require.NoError(err)
+	require.True(storedSrc.ValidatorBondShares.Equal(math.LegacyNewDec(60)))
+
+	storedDst, err := keeper.GetValidator(ctx, dstValAddr)
+	require.NoError(err)
+	require.True(storedDst.ValidatorBondShares.IsZero())
 }
 
 func (s *KeeperTestSuite) TestMsgUndelegate() {
@@ -819,6 +1125,70 @@ func (s *KeeperTestSuite) TestMsgUndelegate() {
 			}
 		})
 	}
+}
+
+func (s *KeeperTestSuite) TestMsgUndelegateLiquidStakerDecreasesLiquidAccounting() {
+	ctx, keeper, msgServer := s.ctx, s.stakingKeeper, s.msgServer
+	require := s.Require()
+
+	_, valAddrs := createValAddrs(1)
+	valAddr := valAddrs[0]
+	lspAddr := liquidStakerAddress(2)
+
+	shares := math.LegacyNewDec(100)
+	undelegatedTokens := math.NewInt(40)
+
+	validator := stakingtestutil.NewValidator(s.T(), valAddr, PKs[0])
+	s.setValidatorState(validator, math.NewInt(100), shares, shares, math.LegacyZeroDec())
+
+	require.NoError(keeper.SetDelegation(ctx, stakingtypes.NewDelegation(
+		lspAddr.String(),
+		valAddr.String(),
+		shares,
+	)))
+	keeper.SetTotalLiquidStakedTokens(ctx, math.NewInt(100))
+
+	_, err := msgServer.Undelegate(ctx, stakingtypes.NewMsgUndelegate(
+		lspAddr.String(),
+		valAddr.String(),
+		sdk.NewCoin(sdk.DefaultBondDenom, undelegatedTokens),
+	))
+	require.NoError(err)
+
+	storedValidator, err := keeper.GetValidator(ctx, valAddr)
+	require.NoError(err)
+	require.True(storedValidator.LiquidShares.Equal(math.LegacyNewDec(60)))
+	require.Equal(math.NewInt(60), keeper.GetTotalLiquidStakedTokens(ctx))
+}
+
+func (s *KeeperTestSuite) TestMsgUndelegateValidatorBondDecreasesBondShares() {
+	ctx, keeper, msgServer := s.ctx, s.stakingKeeper, s.msgServer
+	require := s.Require()
+
+	delAddrs, valAddrs := createValAddrs(2)
+	delegatorAddr := delAddrs[1]
+	valAddr := valAddrs[0]
+
+	shares := math.LegacyNewDec(100)
+	undelegatedTokens := math.NewInt(40)
+
+	validator := stakingtestutil.NewValidator(s.T(), valAddr, PKs[0])
+	s.setValidatorState(validator, math.NewInt(100), shares, math.LegacyZeroDec(), shares)
+
+	delegation := stakingtypes.NewDelegation(delegatorAddr.String(), valAddr.String(), shares)
+	delegation.ValidatorBond = true
+	require.NoError(keeper.SetDelegation(ctx, delegation))
+
+	_, err := msgServer.Undelegate(ctx, stakingtypes.NewMsgUndelegate(
+		delegatorAddr.String(),
+		valAddr.String(),
+		sdk.NewCoin(sdk.DefaultBondDenom, undelegatedTokens),
+	))
+	require.NoError(err)
+
+	storedValidator, err := keeper.GetValidator(ctx, valAddr)
+	require.NoError(err)
+	require.True(storedValidator.ValidatorBondShares.Equal(math.LegacyNewDec(60)))
 }
 
 func (s *KeeperTestSuite) TestMsgCancelUnbondingDelegation() {
@@ -980,6 +1350,97 @@ func (s *KeeperTestSuite) TestMsgCancelUnbondingDelegation() {
 			}
 		})
 	}
+}
+
+func (s *KeeperTestSuite) TestMsgCancelUnbondingDelegationLiquidStakerRestoresLiquidAccounting() {
+	ctx, keeper, msgServer := s.ctx, s.stakingKeeper, s.msgServer
+	require := s.Require()
+
+	_, valAddrs := createValAddrs(1)
+	valAddr := valAddrs[0]
+	lspAddr := liquidStakerAddress(3)
+
+	currentShares := math.LegacyNewDec(60)
+	cancelAmount := math.NewInt(40)
+
+	validator := stakingtestutil.NewValidator(s.T(), valAddr, PKs[0])
+	s.setValidatorState(validator, math.NewInt(60), currentShares, currentShares, math.LegacyZeroDec())
+
+	require.NoError(keeper.SetDelegation(ctx, stakingtypes.NewDelegation(
+		lspAddr.String(),
+		valAddr.String(),
+		currentShares,
+	)))
+	keeper.SetTotalLiquidStakedTokens(ctx, math.NewInt(60))
+	s.withBondedPoolBalance(math.NewInt(60))
+
+	ubd := stakingtypes.NewUnbondingDelegation(
+		lspAddr,
+		valAddr,
+		10,
+		ctx.BlockTime().Add(time.Minute*10),
+		cancelAmount,
+		0,
+		keeper.ValidatorAddressCodec(),
+		s.accountKeeper.AddressCodec(),
+	)
+	require.NoError(keeper.SetUnbondingDelegation(ctx, ubd))
+
+	_, err := msgServer.CancelUnbondingDelegation(ctx, stakingtypes.NewMsgCancelUnbondingDelegation(
+		lspAddr.String(),
+		valAddr.String(),
+		10,
+		sdk.NewCoin(sdk.DefaultBondDenom, cancelAmount),
+	))
+	require.NoError(err)
+
+	storedValidator, err := keeper.GetValidator(ctx, valAddr)
+	require.NoError(err)
+	require.True(storedValidator.LiquidShares.Equal(math.LegacyNewDec(100)))
+	require.Equal(math.NewInt(100), keeper.GetTotalLiquidStakedTokens(ctx))
+}
+
+func (s *KeeperTestSuite) TestMsgCancelUnbondingDelegationValidatorBondRestoresBondShares() {
+	ctx, keeper, msgServer := s.ctx, s.stakingKeeper, s.msgServer
+	require := s.Require()
+
+	delAddrs, valAddrs := createValAddrs(2)
+	delegatorAddr := delAddrs[1]
+	valAddr := valAddrs[0]
+
+	currentShares := math.LegacyNewDec(60)
+	cancelAmount := math.NewInt(40)
+
+	validator := stakingtestutil.NewValidator(s.T(), valAddr, PKs[0])
+	s.setValidatorState(validator, math.NewInt(60), currentShares, math.LegacyZeroDec(), currentShares)
+
+	delegation := stakingtypes.NewDelegation(delegatorAddr.String(), valAddr.String(), currentShares)
+	delegation.ValidatorBond = true
+	require.NoError(keeper.SetDelegation(ctx, delegation))
+
+	ubd := stakingtypes.NewUnbondingDelegation(
+		delegatorAddr,
+		valAddr,
+		10,
+		ctx.BlockTime().Add(time.Minute*10),
+		cancelAmount,
+		0,
+		keeper.ValidatorAddressCodec(),
+		s.accountKeeper.AddressCodec(),
+	)
+	require.NoError(keeper.SetUnbondingDelegation(ctx, ubd))
+
+	_, err := msgServer.CancelUnbondingDelegation(ctx, stakingtypes.NewMsgCancelUnbondingDelegation(
+		delegatorAddr.String(),
+		valAddr.String(),
+		10,
+		sdk.NewCoin(sdk.DefaultBondDenom, cancelAmount),
+	))
+	require.NoError(err)
+
+	storedValidator, err := keeper.GetValidator(ctx, valAddr)
+	require.NoError(err)
+	require.True(storedValidator.ValidatorBondShares.Equal(math.LegacyNewDec(100)))
 }
 
 func (s *KeeperTestSuite) TestMsgUpdateParams() {

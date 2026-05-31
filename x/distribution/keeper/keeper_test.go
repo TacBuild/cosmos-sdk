@@ -21,6 +21,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	distrtestutil "github.com/cosmos/cosmos-sdk/x/distribution/testutil"
 	"github.com/cosmos/cosmos-sdk/x/distribution/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 func TestSetWithdrawAddr(t *testing.T) {
@@ -208,4 +209,130 @@ func TestFundCommunityPool(t *testing.T) {
 	feePool, err := distrKeeper.FeePool.Get(ctx)
 	require.NoError(t, err)
 	require.Equal(t, initPool.CommunityPool.Add(sdk.NewDecCoinsFromCoins(amount...)...), feePool.CommunityPool)
+}
+
+func TestWithdrawTokenizeShareRecordRewardMissingValidator(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	key := storetypes.NewKVStoreKey(types.StoreKey)
+	storeService := runtime.NewKVStoreService(key)
+	testCtx := testutil.DefaultContextWithDB(t, key, storetypes.NewTransientStoreKey("transient_test"))
+	encCfg := moduletestutil.MakeTestEncodingConfig(distribution.AppModuleBasic{})
+	ctx := testCtx.Ctx.WithBlockHeader(cmtproto.Header{Time: time.Now()})
+	addrs := simtestutil.CreateIncrementalAccounts(2)
+
+	owner := addrs[0]
+	valAddr := sdk.ValAddress(addrs[1])
+	record := stakingtypes.TokenizeShareRecord{
+		Id:            1,
+		Owner:         owner.String(),
+		ModuleAccount: "tokenizeshare_1",
+		Validator:     valAddr.String(),
+	}
+
+	bankKeeper := distrtestutil.NewMockBankKeeper(ctrl)
+	stakingKeeper := distrtestutil.NewMockStakingKeeper(ctrl)
+	accountKeeper := distrtestutil.NewMockAccountKeeper(ctrl)
+
+	accountKeeper.EXPECT().GetModuleAddress("distribution").Return(distrAcc.GetAddress())
+	stakingKeeper.EXPECT().GetTokenizeShareRecord(gomock.Any(), uint64(1)).Return(record, nil)
+	stakingKeeper.EXPECT().Validator(gomock.Any(), valAddr).Return(nil, nil)
+
+	distrKeeper := keeper.NewKeeper(
+		encCfg.Codec,
+		storeService,
+		accountKeeper,
+		bankKeeper,
+		stakingKeeper,
+		"fee_collector",
+		authtypes.NewModuleAddress("gov").String(),
+	)
+
+	rewards, err := distrKeeper.WithdrawTokenizeShareRecordReward(ctx, owner, 1)
+	require.ErrorIs(t, err, types.ErrNoValidatorExists)
+	require.Nil(t, rewards)
+}
+
+func TestWithdrawTokenizeShareRecordRewardMissingDelegation(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	key := storetypes.NewKVStoreKey(types.StoreKey)
+	storeService := runtime.NewKVStoreService(key)
+	testCtx := testutil.DefaultContextWithDB(t, key, storetypes.NewTransientStoreKey("transient_test"))
+	encCfg := moduletestutil.MakeTestEncodingConfig(distribution.AppModuleBasic{})
+	ctx := testCtx.Ctx.WithBlockHeader(cmtproto.Header{Time: time.Now()})
+	addrs := simtestutil.CreateIncrementalAccounts(2)
+
+	owner := addrs[0]
+	valAddr := sdk.ValAddress(addrs[1])
+	record := stakingtypes.TokenizeShareRecord{
+		Id:            1,
+		Owner:         owner.String(),
+		ModuleAccount: "tokenizeshare_1",
+		Validator:     valAddr.String(),
+	}
+
+	bankKeeper := distrtestutil.NewMockBankKeeper(ctrl)
+	stakingKeeper := distrtestutil.NewMockStakingKeeper(ctrl)
+	accountKeeper := distrtestutil.NewMockAccountKeeper(ctrl)
+
+	accountKeeper.EXPECT().GetModuleAddress("distribution").Return(distrAcc.GetAddress())
+	stakingKeeper.EXPECT().GetTokenizeShareRecord(gomock.Any(), uint64(1)).Return(record, nil)
+	stakingKeeper.EXPECT().Validator(gomock.Any(), valAddr).Return(stakingtypes.Validator{OperatorAddress: valAddr.String()}, nil)
+	stakingKeeper.EXPECT().Delegation(gomock.Any(), record.GetModuleAddress(), valAddr).Return(nil, nil)
+
+	distrKeeper := keeper.NewKeeper(
+		encCfg.Codec,
+		storeService,
+		accountKeeper,
+		bankKeeper,
+		stakingKeeper,
+		"fee_collector",
+		authtypes.NewModuleAddress("gov").String(),
+	)
+
+	rewards, err := distrKeeper.WithdrawTokenizeShareRecordReward(ctx, owner, 1)
+	require.ErrorIs(t, err, types.ErrNoDelegationExists)
+	require.Nil(t, rewards)
+}
+
+func TestWithdrawSingleShareRecordRewardMissingDelegationForwardsResidualBalance(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	key := storetypes.NewKVStoreKey(types.StoreKey)
+	storeService := runtime.NewKVStoreService(key)
+	testCtx := testutil.DefaultContextWithDB(t, key, storetypes.NewTransientStoreKey("transient_test"))
+	encCfg := moduletestutil.MakeTestEncodingConfig(distribution.AppModuleBasic{})
+	ctx := testCtx.Ctx.WithBlockHeader(cmtproto.Header{Time: time.Now()})
+	addrs := simtestutil.CreateIncrementalAccounts(2)
+
+	owner := addrs[0]
+	valAddr := sdk.ValAddress(addrs[1])
+	record := stakingtypes.TokenizeShareRecord{
+		Id:            1,
+		Owner:         owner.String(),
+		ModuleAccount: "tokenizeshare_1",
+		Validator:     valAddr.String(),
+	}
+	residualBalance := sdk.NewCoins(sdk.NewInt64Coin("stake", 7))
+
+	bankKeeper := distrtestutil.NewMockBankKeeper(ctrl)
+	stakingKeeper := distrtestutil.NewMockStakingKeeper(ctrl)
+	accountKeeper := distrtestutil.NewMockAccountKeeper(ctrl)
+
+	accountKeeper.EXPECT().GetModuleAddress("distribution").Return(distrAcc.GetAddress())
+	stakingKeeper.EXPECT().GetTokenizeShareRecord(gomock.Any(), uint64(1)).Return(record, nil)
+	stakingKeeper.EXPECT().Validator(gomock.Any(), valAddr).Return(stakingtypes.Validator{OperatorAddress: valAddr.String()}, nil)
+	stakingKeeper.EXPECT().Delegation(gomock.Any(), record.GetModuleAddress(), valAddr).Return(nil, stakingtypes.ErrNoDelegation)
+	bankKeeper.EXPECT().GetAllBalances(gomock.Any(), record.GetModuleAddress()).Return(residualBalance)
+	bankKeeper.EXPECT().SendCoins(gomock.Any(), record.GetModuleAddress(), owner, residualBalance).Return(nil)
+
+	distrKeeper := keeper.NewKeeper(
+		encCfg.Codec,
+		storeService,
+		accountKeeper,
+		bankKeeper,
+		stakingKeeper,
+		"fee_collector",
+		authtypes.NewModuleAddress("gov").String(),
+	)
+
+	require.NoError(t, distrKeeper.WithdrawSingleShareRecordReward(ctx, 1))
 }

@@ -174,9 +174,16 @@ func (k Keeper) Slash(ctx context.Context, consAddr sdk.ConsAddress, infractionH
 
 	// Deduct from validator's bonded tokens and update the validator.
 	// Burn the slashed tokens from the pool account and decrease the total supply.
+	initialLiquidTokens := validator.TokensFromShares(validator.LiquidShares).TruncateInt()
 	validator, err = k.RemoveValidatorTokens(ctx, validator, tokensToBurn)
 	if err != nil {
 		return math.NewInt(0), err
+	}
+
+	updatedLiquidTokens := validator.TokensFromShares(validator.LiquidShares).TruncateInt()
+	slashedLiquidTokens := initialLiquidTokens.Sub(updatedLiquidTokens)
+	if err := k.DecreaseTotalLiquidStakedTokens(sdkCtx, slashedLiquidTokens); err != nil {
+		panic(err)
 	}
 
 	switch validator.GetStatus() {
@@ -384,6 +391,21 @@ func (k Keeper) SlashRedelegation(ctx context.Context, srcValidator types.Valida
 		tokensToBurn, err := k.Unbond(ctx, delegatorAddress, valDstAddr, sharesToUnbond)
 		if err != nil {
 			return math.ZeroInt(), err
+		}
+
+		if delegation.ValidatorBond {
+			if err := k.SafelyDecreaseValidatorBond(sdkCtx, valDstAddr, sharesToUnbond); err != nil {
+				k.Logger(ctx).Error("failed to decrease validator bond", "error", err)
+			}
+		}
+
+		if k.DelegatorIsLiquidStaker(delegatorAddress) {
+			if err := k.DecreaseTotalLiquidStakedTokens(sdkCtx, tokensToBurn); err != nil {
+				k.Logger(ctx).Error("failed to decrease total liquid staked tokens", "error", err)
+			}
+			if _, err := k.DecreaseValidatorLiquidShares(sdkCtx, valDstAddr, sharesToUnbond); err != nil {
+				k.Logger(ctx).Error("failed to decrease validator liquid shares", "error", err)
+			}
 		}
 
 		dstValidator, err := k.GetValidator(ctx, valDstAddr)

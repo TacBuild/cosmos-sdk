@@ -48,6 +48,10 @@ func ValidateGenesis(data *types.GenesisState) error {
 		return err
 	}
 
+	if err := validateGenesisStateLSM(data); err != nil {
+		return err
+	}
+
 	return data.Params.Validate()
 }
 
@@ -84,6 +88,86 @@ func validateGenesisStateValidators(validators []types.Validator) error {
 		}
 
 		addrMap[strKey] = true
+	}
+
+	return nil
+}
+
+func validateGenesisStateLSM(data *types.GenesisState) error {
+	recordIDs := make(map[uint64]struct{}, len(data.TokenizeShareRecords))
+	recordDenoms := make(map[string]struct{}, len(data.TokenizeShareRecords))
+	maxRecordID := uint64(0)
+
+	for _, record := range data.TokenizeShareRecords {
+		if _, ok := recordIDs[record.Id]; ok {
+			return fmt.Errorf("duplicate tokenize share record id in genesis state: %d", record.Id)
+		}
+		recordIDs[record.Id] = struct{}{}
+		if record.Id > maxRecordID {
+			maxRecordID = record.Id
+		}
+
+		if _, err := sdk.AccAddressFromBech32(record.Owner); err != nil {
+			return fmt.Errorf("invalid tokenize share record owner %q: %w", record.Owner, err)
+		}
+		if _, err := sdk.ValAddressFromBech32(record.Validator); err != nil {
+			return fmt.Errorf("invalid tokenize share record validator %q: %w", record.Validator, err)
+		}
+
+		expectedModuleAccount := fmt.Sprintf("%s%d", types.TokenizeShareModuleAccountPrefix, record.Id)
+		if record.ModuleAccount != expectedModuleAccount {
+			return fmt.Errorf(
+				"invalid tokenize share record module account for id %d: got %q, expected %q",
+				record.Id,
+				record.ModuleAccount,
+				expectedModuleAccount,
+			)
+		}
+
+		denom := record.GetShareTokenDenom()
+		if _, ok := recordDenoms[denom]; ok {
+			return fmt.Errorf("duplicate tokenize share record denom in genesis state: %s", denom)
+		}
+		recordDenoms[denom] = struct{}{}
+	}
+
+	if data.LastTokenizeShareRecordId < maxRecordID {
+		return fmt.Errorf(
+			"last tokenize share record id %d is lower than max tokenize share record id %d",
+			data.LastTokenizeShareRecordId,
+			maxRecordID,
+		)
+	}
+
+	if !data.TotalLiquidStakedTokens.IsNil() && data.TotalLiquidStakedTokens.IsNegative() {
+		return fmt.Errorf("total liquid staked tokens cannot be negative: %s", data.TotalLiquidStakedTokens)
+	}
+
+	lockAddresses := make(map[string]struct{}, len(data.TokenizeShareLocks))
+	for _, lock := range data.TokenizeShareLocks {
+		address, err := sdk.AccAddressFromBech32(lock.Address)
+		if err != nil {
+			return fmt.Errorf("invalid tokenize share lock address %q: %w", lock.Address, err)
+		}
+
+		addressKey := address.String()
+		if _, ok := lockAddresses[addressKey]; ok {
+			return fmt.Errorf("duplicate tokenize share lock address in genesis state: %s", addressKey)
+		}
+		lockAddresses[addressKey] = struct{}{}
+
+		switch lock.Status {
+		case types.ShareLockStatusLocked.String():
+			if !lock.CompletionTime.IsZero() {
+				return fmt.Errorf("locked tokenize share lock %s cannot have completion time", addressKey)
+			}
+		case types.ShareLockStatusLockExpiring.String():
+			if lock.CompletionTime.IsZero() {
+				return fmt.Errorf("expiring tokenize share lock %s must have completion time", addressKey)
+			}
+		default:
+			return fmt.Errorf("invalid tokenize share lock status: %s", lock.Status)
+		}
 	}
 
 	return nil

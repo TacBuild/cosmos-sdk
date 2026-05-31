@@ -12,6 +12,7 @@ import (
 	storetypes "cosmossdk.io/store/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/address"
 	"github.com/cosmos/cosmos-sdk/runtime"
 	"github.com/cosmos/cosmos-sdk/testutil"
@@ -35,6 +36,8 @@ type KeeperTestSuite struct {
 	suite.Suite
 
 	ctx           sdk.Context
+	storeKey      storetypes.StoreKey
+	cdc           codec.Codec
 	stakingKeeper *stakingkeeper.Keeper
 	bankKeeper    *stakingtestutil.MockBankKeeper
 	accountKeeper *stakingtestutil.MockAccountKeeper
@@ -70,6 +73,8 @@ func (s *KeeperTestSuite) SetupTest() {
 	require.NoError(keeper.SetParams(ctx, stakingtypes.DefaultParams()))
 
 	s.ctx = ctx
+	s.storeKey = key
+	s.cdc = encCfg.Codec
 	s.stakingKeeper = keeper
 	s.bankKeeper = bankKeeper
 	s.accountKeeper = accountKeeper
