@@ -163,6 +163,43 @@ func (s *KeeperTestSuite) TestMsgTokenizeSharesRejectsInvalidShareOwner() {
 	require.Nil(res)
 }
 
+func (s *KeeperTestSuite) TestMsgTokenizeSharesRespectsAppDelegatorAllowlist() {
+	require := s.Require()
+
+	validator := stakingtestutil.NewValidator(s.T(), ValAddr, PKS[0])
+	require.NoError(s.stakingKeeper.SetValidator(s.ctx, validator))
+
+	require.True(s.stakingKeeper.CanTokenizeShares(Addr))
+
+	allowedAddr := liquidStakerAddress(0x42)
+	s.stakingKeeper.SetTokenizeSharesAllowedDelegators(allowedAddr)
+
+	res, err := s.msgServer.TokenizeShares(s.ctx, &stakingtypes.MsgTokenizeShares{
+		DelegatorAddress:    Addr.String(),
+		ValidatorAddress:    ValAddr.String(),
+		Amount:              sdk.NewCoin(sdk.DefaultBondDenom, math.NewInt(1)),
+		TokenizedShareOwner: Addr.String(),
+	})
+	require.ErrorIs(err, sdkerrors.ErrUnauthorized)
+	require.Nil(res)
+	require.False(s.stakingKeeper.CanTokenizeShares(Addr))
+	require.True(s.stakingKeeper.CanTokenizeShares(allowedAddr))
+
+	s.stakingKeeper.SetTokenizeSharesAllowedDelegators(Addr)
+
+	res, err = s.msgServer.TokenizeShares(s.ctx, &stakingtypes.MsgTokenizeShares{
+		DelegatorAddress:    Addr.String(),
+		ValidatorAddress:    ValAddr.String(),
+		Amount:              sdk.NewCoin(sdk.DefaultBondDenom, math.ZeroInt()),
+		TokenizedShareOwner: Addr.String(),
+	})
+	require.ErrorIs(err, sdkerrors.ErrInvalidRequest)
+	require.Nil(res)
+
+	s.stakingKeeper.SetTokenizeSharesAllowedDelegators()
+	require.True(s.stakingKeeper.CanTokenizeShares(Addr))
+}
+
 func (s *KeeperTestSuite) TestMsgTokenizeSharesRejectsZeroShareTokenMintBeforeMutation() {
 	ctx := s.ctx
 	require := s.Require()

@@ -788,6 +788,9 @@ func (k msgServer) TokenizeShares(goCtx context.Context, msg *types.MsgTokenizeS
 	if err != nil {
 		return nil, err
 	}
+	if !k.CanTokenizeShares(delegatorAddress) {
+		return nil, errorsmod.Wrapf(sdkerrors.ErrUnauthorized, "tokenize shares is not allowed for delegator %s", delegatorAddress)
+	}
 
 	if _, err := sdk.AccAddressFromBech32(msg.TokenizedShareOwner); err != nil {
 		return nil, sdkerrors.ErrInvalidAddress.Wrapf("invalid tokenized share owner address: %s", err)

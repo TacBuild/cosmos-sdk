@@ -32,6 +32,10 @@ type Keeper struct {
 	authority             string
 	validatorAddressCodec addresscodec.Codec
 	consensusAddressCodec addresscodec.Codec
+
+	// tokenizeSharesAllowedDelegators is an in-memory app wiring restriction.
+	// Empty means tokenization is unrestricted, preserving the SDK default.
+	tokenizeSharesAllowedDelegators map[string]struct{}
 }
 
 // NewKeeper creates a new staking Keeper instance
@@ -72,6 +76,34 @@ func NewKeeper(
 		validatorAddressCodec: validatorAddressCodec,
 		consensusAddressCodec: consensusAddressCodec,
 	}
+}
+
+// SetTokenizeSharesAllowedDelegators restricts MsgTokenizeShares to the supplied
+// delegator addresses. Passing no addresses clears the restriction.
+func (k *Keeper) SetTokenizeSharesAllowedDelegators(addrs ...sdk.AccAddress) *Keeper {
+	if len(addrs) == 0 {
+		k.tokenizeSharesAllowedDelegators = nil
+		return k
+	}
+
+	allowed := make(map[string]struct{}, len(addrs))
+	for _, addr := range addrs {
+		if len(addr) == 0 {
+			panic("tokenize shares allowed delegator cannot be empty")
+		}
+		allowed[string(addr)] = struct{}{}
+	}
+	k.tokenizeSharesAllowedDelegators = allowed
+	return k
+}
+
+// CanTokenizeShares returns whether the delegator is allowed by the app wiring.
+func (k Keeper) CanTokenizeShares(delegator sdk.AccAddress) bool {
+	if len(k.tokenizeSharesAllowedDelegators) == 0 {
+		return true
+	}
+	_, ok := k.tokenizeSharesAllowedDelegators[string(delegator)]
+	return ok
 }
 
 // Logger returns a module-specific logger.
