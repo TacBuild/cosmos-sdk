@@ -148,16 +148,25 @@ func (k BaseKeeper) DelegateCoins(ctx context.Context, delegatorAddr, moduleAccA
 		}
 	}
 
-	if err := k.trackDelegation(ctx, delegatorAddr, balances, amt); err != nil {
+	locked, err := k.trackDelegation(ctx, delegatorAddr, balances, amt)
+	if err != nil {
 		return errorsmod.Wrap(err, "failed to track delegation")
 	}
-	// emit coin spent event
+	// emit coin spent event; when part of the delegation was drawn from locked
+	// (vesting) balance, record that portion so downstream consumers (e.g. the EVM
+	// balance handler) can reconcile spendable-only balances correctly.
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
-	sdkCtx.EventManager().EmitEvent(
-		types.NewCoinSpentEvent(delegatorAddr, amt),
-	)
+	if locked.IsZero() {
+		sdkCtx.EventManager().EmitEvent(
+			types.NewCoinSpentEvent(delegatorAddr, amt),
+		)
+	} else {
+		sdkCtx.EventManager().EmitEvent(
+			types.NewCoinSpentEventWithLocked(delegatorAddr, amt, locked),
+		)
+	}
 
-	err := k.addCoins(ctx, moduleAccAddr, amt)
+	err = k.addCoins(ctx, moduleAccAddr, amt)
 	if err != nil {
 		return err
 	}
@@ -430,21 +439,31 @@ func (k BaseKeeper) setSupply(ctx context.Context, coin sdk.Coin) {
 }
 
 // trackDelegation tracks the delegation of the given account if it is a vesting account
-func (k BaseKeeper) trackDelegation(ctx context.Context, addr sdk.AccAddress, balance, amt sdk.Coins) error {
+// trackDelegation performs the vesting bookkeeping for a delegation and returns
+// the portion of amt that was drawn from locked (still-vesting) balance, i.e. the
+// increase in the account's DelegatedVesting. For non-vesting accounts it returns
+// nil (nothing is locked).
+func (k BaseKeeper) trackDelegation(ctx context.Context, addr sdk.AccAddress, balance, amt sdk.Coins) (sdk.Coins, error) {
 	acc := k.ak.GetAccount(ctx, addr)
 	if acc == nil {
-		return errorsmod.Wrapf(sdkerrors.ErrUnknownAddress, "account %s does not exist", addr)
+		return nil, errorsmod.Wrapf(sdkerrors.ErrUnknownAddress, "account %s does not exist", addr)
 	}
 
 	vacc, ok := acc.(types.VestingAccount)
-	if ok {
-		// TODO: return error on account.TrackDelegation
-		sdkCtx := sdk.UnwrapSDKContext(ctx)
-		vacc.TrackDelegation(sdkCtx.BlockHeader().Time, balance, amt)
-		k.ak.SetAccount(ctx, acc)
+	if !ok {
+		return nil, nil
 	}
 
-	return nil
+	// Snapshot delegated-vesting before/after TrackDelegation to determine how
+	// much of this delegation came from locked balance. TrackDelegation only ever
+	// adds to DelegatedVesting, so the difference is non-negative.
+	before := vacc.GetDelegatedVesting()
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	vacc.TrackDelegation(sdkCtx.BlockHeader().Time, balance, amt)
+	k.ak.SetAccount(ctx, acc)
+	locked := vacc.GetDelegatedVesting().Sub(before...)
+
+	return locked, nil
 }
 
 // trackUndelegation trakcs undelegation of the given account if it is a vesting account

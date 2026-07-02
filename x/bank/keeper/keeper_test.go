@@ -1722,6 +1722,33 @@ func (suite *KeeperTestSuite) TestDelegateCoins() {
 
 	// require that delegated vesting amount is equal to what was delegated with DelegateCoins
 	require.Equal(delCoins, vacc.GetDelegatedVesting())
+
+	// require that the vesting delegation emitted a coin_spent event carrying the
+	// locked_amount attribute equal to the vesting (locked) portion delegated,
+	// while the non-vesting delegation emitted a coin_spent event WITHOUT it.
+	var (
+		vestingSpentWithLocked bool
+		nonVestingSpentNoLocked bool
+	)
+	for _, e := range ctx.EventManager().Events() {
+		if e.Type != banktypes.EventTypeCoinSpent {
+			continue
+		}
+		lockedAttr, hasLocked := "", false
+		for _, a := range e.Attributes {
+			if a.Key == banktypes.AttributeKeyLockedAmount {
+				lockedAttr, hasLocked = a.Value, true
+			}
+		}
+		if hasLocked {
+			require.Equal(delCoins.String(), lockedAttr, "locked_amount must equal the delegated vesting portion")
+			vestingSpentWithLocked = true
+		} else {
+			nonVestingSpentNoLocked = true
+		}
+	}
+	require.True(vestingSpentWithLocked, "vesting delegation must emit coin_spent with locked_amount")
+	require.True(nonVestingSpentNoLocked, "non-vesting delegation must emit coin_spent without locked_amount")
 }
 
 func (suite *KeeperTestSuite) TestDelegateCoins_Invalid() {

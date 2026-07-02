@@ -21,6 +21,13 @@ const (
 	AttributeKeyReceiver = "receiver"
 	AttributeKeyMinter   = "minter"
 	AttributeKeyBurner   = "burner"
+
+	// AttributeKeyLockedAmount records the portion of a coin_spent amount that was
+	// drawn from locked (still-vesting) balance — e.g. when delegating
+	// vesting-locked tokens. It is only present on coin_spent events emitted by
+	// DelegateCoins for vesting accounts, so consumers (such as the EVM balance
+	// handler) can distinguish the locked vs spendable part of a delegation.
+	AttributeKeyLockedAmount = "locked_amount"
 )
 
 // NewCoinSpentEvent constructs a new coin spent sdk.Event
@@ -29,6 +36,19 @@ func NewCoinSpentEvent(spender sdk.AccAddress, amount sdk.Coins) sdk.Event {
 		EventTypeCoinSpent,
 		sdk.NewAttribute(AttributeKeySpender, spender.String()),
 		sdk.NewAttribute(sdk.AttributeKeyAmount, amount.String()),
+	)
+}
+
+// NewCoinSpentEventWithLocked constructs a coin_spent event that additionally
+// records how much of the spent amount was drawn from locked (vesting) balance.
+// Used by DelegateCoins so consumers can tell how much of a delegation came from
+// locked vs spendable funds.
+func NewCoinSpentEventWithLocked(spender sdk.AccAddress, amount, locked sdk.Coins) sdk.Event {
+	return sdk.NewEvent(
+		EventTypeCoinSpent,
+		sdk.NewAttribute(AttributeKeySpender, spender.String()),
+		sdk.NewAttribute(sdk.AttributeKeyAmount, amount.String()),
+		sdk.NewAttribute(AttributeKeyLockedAmount, locked.String()),
 	)
 }
 

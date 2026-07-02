@@ -164,6 +164,20 @@ func TestTrackDelegationContVestingAcc(t *testing.T) {
 	require.Equal(t, sdk.Coins{sdk.NewInt64Coin(stakeDenom, 50)}, cva.DelegatedVesting)
 	require.Equal(t, sdk.Coins{sdk.NewInt64Coin(stakeDenom, 50)}, cva.DelegatedFree)
 
+	// The delta of DelegatedVesting for a single delegation equals exactly the
+	// locked (still-vesting) portion of that delegation. This is the value bank
+	// emits as the coin_spent "locked_amount" attribute, so verify the split for a
+	// delegation that draws partly on vesting (locked) and partly on vested (free).
+	cva, err = types.NewContinuousVestingAccount(bacc, origCoins, now.Unix(), endTime.Unix())
+	require.NoError(t, err)
+	// at 12h: 50 is still vesting (locked), 50 is vested (free)
+	before := cva.GetDelegatedVesting()
+	cva.TrackDelegation(now.Add(12*time.Hour), origCoins, sdk.Coins{sdk.NewInt64Coin(stakeDenom, 70)})
+	lockedDelegated := cva.GetDelegatedVesting().Sub(before...)
+	// of 70 delegated: 50 come from locked (vesting), 20 from free (vested)
+	require.Equal(t, sdk.Coins{sdk.NewInt64Coin(stakeDenom, 50)}, lockedDelegated)
+	require.Equal(t, sdk.Coins{sdk.NewInt64Coin(stakeDenom, 20)}, cva.DelegatedFree)
+
 	// require no modifications when delegation amount is zero or not enough funds
 	cva, err = types.NewContinuousVestingAccount(bacc, origCoins, now.Unix(), endTime.Unix())
 	require.NoError(t, err)
